@@ -1,0 +1,11 @@
+{
+  "name": "FastFeet",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/fabianoobispo/FastFeet",
+  "author": "fbc623 <fbc623@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
