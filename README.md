@@ -23,7 +23,7 @@ yarn
 ### Subindo o banco
 ```sh
 mkdir db
-docker run -it -p 5432:5432 postgres
+docker run --name postgresfast -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
 ```
 
 ### Rodando migração e criando usuário Admin
