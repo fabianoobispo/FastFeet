@@ -17,3 +17,6 @@ class Database {
 }
 
 export default new Database();
+
+
+//para criar migration nova e yarn sequelize migration:create --name=create-users

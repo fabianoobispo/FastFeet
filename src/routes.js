@@ -53,9 +53,8 @@ routes.use(auth);
 //routes.delete('/deliveryman/:id', DeliverymanController.destroy);
 
 routes.post('/recipients', RecipientController.store);
-//routes.get('/recipients/:id', RecipientController.show);
-//routes.put('/recipients/:id', RecipientController.update);
-//routes.delete('/recipients/:id', RecipientController.destroy);
+routes.get('/recipients/:id', RecipientController.show);
+routes.put('/recipients/:id', RecipientController.update);
 
 //routes.post('/files', upload.single('file'), FileController.store);
 

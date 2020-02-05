@@ -1,16 +1,21 @@
 <h1 align="center">
-  <img alt="Fastfeet" title="Fastfeet" src="logo/logo.png" width="300px" />
+  <img alt="Fastfeet" title="Fastfeet" src="src/img/logo.png" width="300px" />
 </h1>
 
 <h3 align="center">
-  Desafio 2: FastFeet, o início
+  Desafio  FastFeet, o início
 </h3>
 
 
 <p>Esse desafio faz parte do Desafio Final, que é uma aplicação completa (Back-end, Front-end e Mobile) que é avaliada para emissão do Certificado do Bootcamp GoStack, por isso é fundamental que ele seja feito com muito empenho!</p>
 
-<p>Começando a primeira etapa dia 29/01 de quatro partes. </p>
+<p>Começando a primeira etapa dia 29/01 e treminada 05/03 de quatro partes. </p>
 
+<p>Começando a segunda etapa dia / e treminada / de quatro partes. </p>
+
+<p>Começando a terceira etapa dia / e treminada / de quatro partes. </p>
+
+<p>Começando a quarta etapa dia / e treminada / de quatro partes. </p>
 
 
 ### Instalando Dependências
@@ -26,6 +31,7 @@ mkdir db
 docker run --name postgresfast -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
 ```
 
+
 ### Rodando migração e criando usuário Admin
 ```sh
 yarn sequelize db:migrate
@@ -37,9 +43,19 @@ yarn sequelize db:seed:all
 yarn dev
 ```
 
+### Com autenticação JWT
+
+### Realizando as devidas validaçôes
+
+
 ### Rotas
-| Resource | Method | Params (JSON) | Headers |
-| :---     | :---:  |    :---:      |    ---: |
-| /session       | POST | {email, password} | |
-| /recipient     | POST | {nome, rua, numero, complemento, estado, cep} | JWT |
-| /recipient/:id | PUT  | {nome, rua, numero, complemento, estado, cep} | JWT |
+post /sessions para iniciar uma sessao com email e senha 
+
+post /recipients para adicionar novo destinatario com nome  e endereço completo 
+
+get /recipients:id para mostar o cadasto do id indicado 
+
+put /recipients:id para atualizar o cadastro selecionado 
+
+
+

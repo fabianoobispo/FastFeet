@@ -3,17 +3,17 @@ import * as Yup from 'yup';
 import Recipient from '../models/Recipient';
 
 class RecipientController {
-  async show(request, response) {
+  async show(req, res) {
     const schema = Yup.object().shape({
       id: Yup.number()
         .positive()
         .required(),
     });
 
-    if (!(await schema.isValid(request.params)))
-      return response.status(400).json({ error: 'Validation fails' });
+    if (!(await schema.isValid(req.params)))
+      return res.status(400).json({ error: 'Validation fails' });
 
-    const recipient = await Recipient.findByPk(request.params.id, {
+    const recipient = await Recipient.findByPk(req.params.id, {
       attributes: [
         'id',
         'name',
@@ -26,12 +26,12 @@ class RecipientController {
     });
 
     if (!recipient)
-      return response.status(400).json({ error: 'Recipient not found' });
+      return res.status(400).json({ error: 'Recipient not found' });
 
-    return response.json(recipient);
+    return res.json(recipient);
   }
 
-  async store(request, response) {
+  async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       street: Yup.string().required(),
@@ -46,24 +46,24 @@ class RecipientController {
         .required(),
     });
 
-    if (!(await schema.isValid(request.body)))
-      return response.status(400).json({ error: 'Validation fails' });
+    if (!(await schema.isValid(req.body)))
+      return res.status(400).json({ error: 'Validation fails' });
 
-    const { zipcode } = request.body;
+    const { house } = req.body;
 
     const checkRecipientExists = await Recipient.findOne({
-      where: { zipcode },
+      where: { house },
     });
 
     if (checkRecipientExists)
-      return response.status(400).json({ error: 'Recipient already exists' });
+      return res.status(400).json({ error: 'Recipient already exists' });
 
-    const recipient = await Recipient.create(request.body);
+    const recipient = await Recipient.create(req.body);
 
-    return response.json(recipient);
+    return res.json(recipient);
   }
 
-  async update(request, response) {
+  async update(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string(),
       street: Yup.string(),
@@ -74,13 +74,15 @@ class RecipientController {
       house: Yup.number().positive(),
     });
 
-    if (!(await schema.isValid(request.body)))
-      return response.status(400).json({ error: 'Validation fails' });
+    if (!(await schema.isValid(req.body)))
+      return res.status(400).json({ error: 'Validation fails' });
 
-    const recipient = await Recipient.findByPk(request.params.id);
+    const recipient = await Recipient.findByPk(req.params.id);
+
+   
 
     if (!recipient)
-      return response.status(400).json({ error: 'Recipient not found' });
+      return res.status(400).json({ error: 'Recipient not found' });
 
     const {
       name,
@@ -90,10 +92,10 @@ class RecipientController {
       city,
       state,
       house,
-    } = await recipient.update(request.body);
+    } = await recipient.update(req.body);
 
-    return response.json({
-      id: request.params.id,
+    return res.json({
+      id: req.params.id,
       name,
       street,
       complement,
@@ -104,25 +106,6 @@ class RecipientController {
     });
   }
 
-  async destroy(request, response) {
-    const schema = Yup.object().shape({
-      id: Yup.number()
-        .positive()
-        .required(),
-    });
-
-    if (!(await schema.isValid(request.params)))
-      return response.status(400).json({ error: 'Validation fails' });
-
-    const recipient = await Recipient.findByPk(request.params.id);
-
-    if (!recipient)
-      return response.status(400).json({ error: 'Recipient not found' });
-
-    recipient.destroy();
-
-    return response.send();
-  }
 }
 
 export default new RecipientController();
