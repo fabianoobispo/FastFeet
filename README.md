@@ -59,7 +59,7 @@ put /recipients:id para atualizar o cadastro selecionado
 
 
 
-#### para o desafio 03 falta fazer:
+# para o desafio 03 falta fazer:
 ### **Funcionalidades do administrador**
 
 Abaixo estão descritas as funcionalidades que você deve adicionar em sua aplicação para administradores.
