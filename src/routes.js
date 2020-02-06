@@ -1,21 +1,21 @@
 import { Router } from 'express';
-//import multer from 'multer';
-//import multerConfig from './config/multer';
+import multer from 'multer';
+import multerConfig from './config/multer';
 
 //import ShowController from './app/controllers/ShowController';
 import SessionController from './app/controllers/SessionController';
-import RecipientController from './app/controllers/RecipientController';
-//import DeliverymanController from './app/controllers/DeliverymanController';
+import RepicientsController from './app/controllers/RepicientsController';
+import DeliverymanController from './app/controllers/DeliveryManController';
 //import DeliveryProblemController from './app/controllers/DeliveryProblemController';
 //import DeliveryController from './app/controllers/DeliveryController';
 //import WithdrawController from './app/controllers/WithdrawController';
 //import DeliverController from './app/controllers/DeliverController';
-//import FileController from './app/controllers/FileController';
+import FileController from './app/controllers/FileController';
 
 import auth from './app/middlewares/auth';
 
 const routes = new Router();
-//const upload = multer(multerConfig);
+const upload = multer(multerConfig);
 
 routes.post('/sessions', SessionController.store);
 
@@ -47,15 +47,17 @@ routes.use(auth);
 //routes.put('/deliveries/:id', DeliveryController.update);
 //routes.delete('/deliveries/:id', DeliveryController.destroy);
 
-//routes.get('/deliveryman', DeliverymanController.index);
-//routes.post('/deliveryman', DeliverymanController.store);
-//routes.put('/deliveryman/:id', DeliverymanController.update);
-//routes.delete('/deliveryman/:id', DeliverymanController.destroy);
+routes.get('/deliverymans', DeliverymanController.index);
+routes.post('/deliverymans', DeliverymanController.store);
+routes.put('/deliverymans', DeliverymanController.update);
+routes.delete('/deliverymans/:id', DeliverymanController.delete);
 
-routes.post('/recipients', RecipientController.store);
-routes.get('/recipients/:id', RecipientController.show);
-routes.put('/recipients/:id', RecipientController.update);
+routes.get('/repicients', RepicientsController.index);
+routes.get('/repicients/:id', RepicientsController.show);
+routes.post('/repicients', RepicientsController.store);
+routes.put('/repicients', RepicientsController.update);
+routes.delete('/repicients/:id', RepicientsController.delete);
 
-//routes.post('/files', upload.single('file'), FileController.store);
+routes.post('/files', upload.single('file'), FileController.store);
 
 export default routes;
