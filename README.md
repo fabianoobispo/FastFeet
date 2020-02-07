@@ -48,14 +48,40 @@ yarn dev
 ### Realizando as devidas validaçôes
 
 
-### Rotas
-post /sessions para iniciar uma sessao com email e senha 
+### **Rotas**
 
-post /recipients para adicionar novo destinatario com nome  e endereço completo 
+Abaixo estão descritas as rotas do sistema.
 
-get /recipients:id para mostar o cadasto do id indicado 
+  #### - Sessions (/sessions)
+  
+   | Resource | Method | Params (JSON) | Headers |
+| :---:      | :---:  |    :---:      |    :---: |
+| /sessions    | POST  | {email, password} | {/} |
 
-put /recipients:id para atualizar o cadastro selecionado 
+#### - Repicients (/repicients)
+  
+   | Resource | Method | Params (JSON) | Headers |
+| :---:      | :---:  |    :---:      |    :---: |
+| /repicients    | GET   | {/} | JWT |
+| /repicients/:id    | GET    | {/} | JWT |
+| /repicients    | POST   | {name, rua, numero, complemento, estado, cidade, cep} | JWT |
+| /repicients    | PUT    | {name, rua, numero, complemento, estado, cidade, cep} | JWT |
+| /repicients/:id    | DELETE   | {/} | JWT |
+
+
+
+  #### - Deliverymans (/deliverymans)
+  
+   | Resource | Method | Params (JSON) | Headers |
+| :---:      | :---:  |    :---:      |    :---: |
+| /deliverymans    | GET  | {/} | JWT |
+| /deliverymans/:id    | GET  | {/} | {/} |
+| /deliverymans    | POST  | {email,name } | JWT |
+| /deliverymans    | PUT  | {email, name, avatar_id } | JWT |
+| /deliverymans/:id    | DELETE  | {/} | JWT |
+
+
+
 
 
 
