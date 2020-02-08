@@ -5,7 +5,7 @@ import multerConfig from './config/multer';
 //import ShowController from './app/controllers/ShowController';
 import SessionController from './app/controllers/SessionController';
 import RepicientsController from './app/controllers/RepicientsController';
-import DeliverymanController from './app/controllers/DeliveryManController';
+import DeliveryManController from './app/controllers/DeliveryManController';
 //import DeliveryProblemController from './app/controllers/DeliveryProblemController';
 //import DeliveryController from './app/controllers/DeliveryController';
 //import WithdrawController from './app/controllers/WithdrawController';
@@ -47,10 +47,10 @@ routes.use(auth);
 //routes.put('/deliveries/:id', DeliveryController.update);
 //routes.delete('/deliveries/:id', DeliveryController.destroy);
 
-routes.get('/deliverymans', DeliverymanController.index);
-routes.post('/deliverymans', DeliverymanController.store);
-routes.put('/deliverymans', DeliverymanController.update);
-routes.delete('/deliverymans/:id', DeliverymanController.delete);
+routes.get('/deliverymans', DeliveryManController.index);
+routes.post('/deliverymans', DeliveryManController.store);
+//routes.put('/deliverymans', DeliveryManController.update);
+routes.delete('/deliverymans/:id', DeliveryManController.delete);
 
 routes.get('/repicients', RepicientsController.index);
 routes.get('/repicients/:id', RepicientsController.show);

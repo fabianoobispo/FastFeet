@@ -77,7 +77,7 @@ class RepicientsController {
 
     await repicient.destroy();
 
-    return res.status(200).json();
+    return res.status(200).json({ message: `Repicient deleted.` });
   }
 }
 

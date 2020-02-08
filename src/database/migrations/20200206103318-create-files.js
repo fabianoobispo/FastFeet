@@ -1,6 +1,7 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('files', {
+  // eslint-disable-next-line prettier/prettier
+  up: (queryInterface, Sequelize) => queryInterface.createTable('files',
+    {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -14,6 +15,7 @@ module.exports = {
       path: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
       },
       created_at: {
         type: Sequelize.DATE,
@@ -23,10 +25,8 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
-    });
-  },
+    }),
 
-  down: queryInterface => {
-    return queryInterface.dropTable('files');
-  },
+  // eslint-disable-next-line arrow-parens
+  down: (queryInterface) => queryInterface.dropTable('files'),
 };

@@ -1,15 +1,18 @@
 import * as Yup from 'yup';
 
 import Deliveryman from '../models/Deliveryman';
-import Delivery from '../models/Delivery';
-import Repicient from '../models/Repicient';
+//import Delivery from '../models/Delivery';
+//import Repicient from '../models/Repicient';
 
-class DeliverymanController {
+class DeliveryManController {
   async index(req, res) {
     const deliveryman = await Deliveryman.findAll();
 
     return res.json(deliveryman);
   }
+
+  /*
+
 
   async show(req, res) {
     const schema = Yup.object().shape({
@@ -48,6 +51,7 @@ class DeliverymanController {
     return res.json(delivery);
   }
 
+  */
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string()
@@ -57,6 +61,7 @@ class DeliverymanController {
         .email()
         .required(),
     });
+
 
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation faild.' });
@@ -77,6 +82,8 @@ class DeliverymanController {
       email,
     });
   }
+
+  
 
   async update(req, res) {
     const schema = Yup.object().shape({
@@ -110,18 +117,10 @@ class DeliverymanController {
       avatar_id,
     });
   }
-
+ 
   async delete(req, res) {
-    const schema = Yup.object().shape({
-      id: Yup.number()
-        .required()
-        .min(1)
-        .positive(),
-    });
-
-    if (!(await schema.isValid(req.params.id))) {
-      return res.status(400).json({ error: 'Validation faild.' });
-    }
+  
+    
 
     const deliveryman = await Deliveryman.findByPk(req.params.id);
 
@@ -131,8 +130,9 @@ class DeliverymanController {
 
     await deliveryman.destroy();
 
-    return res.status(200).json();
+    return res.status(200).json({ error: 'Deliveryman Deleted.' });
   }
+
 }
 
-export default new DeliverymanController();
+export default new DeliveryManController();
