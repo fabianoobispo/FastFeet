@@ -16,20 +16,12 @@ const upload = multer(multerConfig);
 // rotas sem autenticação
 routes.post('/sessions', SessionController.store);
 
+// rotas com autenticação
 routes.use(auth);
-
-// routes.get('/problems', DeliveryProblemController.index);
-// routes.get('/problems/:id', DeliveryProblemController.show);
-// routes.put('/problems/:id/cancel-delivery', DeliveryProblemController.update);
-
-// routes.get('/deliveries', DeliveryController.index);
-// routes.post('/deliveries', DeliveryController.store);
-// routes.put('/deliveries/:id', DeliveryController.update);
-// routes.delete('/deliveries/:id', DeliveryController.destroy);
 
 routes.get('/deliverymans', DeliveryManController.index);
 routes.post('/deliverymans', DeliveryManController.store);
-// routes.put('/deliverymans', DeliveryManController.update);
+routes.put('/deliverymans', DeliveryManController.update);
 routes.delete('/deliverymans/:id', DeliveryManController.delete);
 
 routes.get('/recipient', RecipientController.index);
