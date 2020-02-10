@@ -53,25 +53,25 @@ yarn dev
 Abaixo estão descritas as rotas do sistema.
 
   #### - Sessions (/sessions)
-  
+
    | Resource | Method | Params (JSON) | Headers |
 | :---:      | :---:  |    :---:      |    :---: |
 | /sessions    | POST  | {email, password} | {/} |
 
-#### - Repicients (/repicients)
-  
+#### - Repicients (/recipient)
+
    | Resource | Method | Params (JSON) | Headers |
 | :---:      | :---:  |    :---:      |    :---: |
-| /repicients    | GET   | {/} | JWT |
-| /repicients/:id    | GET    | {/} | JWT |
-| /repicients    | POST   | {name, rua, numero, complemento, estado, cidade, cep} | JWT |
-| /repicients    | PUT    | {name, rua, numero, complemento, estado, cidade, cep} | JWT |
-| /repicients/:id    | DELETE   | {/} | JWT |
+| /recipient    | GET   | {/} | JWT |
+| /recipient/:id    | GET    | {/} | JWT |
+| /recipient    | POST   | { name, street, number, complement, state, city, cep} | JWT |
+| /recipient/:id    | PUT    | { name, street, number, complement, state, city, cep}  | JWT |
+| /recipient/:id    | DELETE   | {/} | JWT |
 
 
 
   #### - Deliverymans (/deliverymans)
-  
+
    | Resource | Method | Params (JSON) | Headers |
 | :---:      | :---:  |    :---:      |    :---: |
 | /deliverymans    | GET  | {/} | JWT |
