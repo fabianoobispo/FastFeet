@@ -20,8 +20,9 @@ routes.post('/sessions', SessionController.store);
 routes.use(auth);
 
 routes.get('/deliverymans', DeliveryManController.index);
+routes.get('/deliverymans/:id', DeliveryManController.show);
 routes.post('/deliverymans', DeliveryManController.store);
-routes.put('/deliverymans', DeliveryManController.update);
+routes.put('/deliverymans/:id', DeliveryManController.update);
 routes.delete('/deliverymans/:id', DeliveryManController.delete);
 
 routes.get('/recipient', RecipientController.index);
