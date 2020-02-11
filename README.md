@@ -75,8 +75,8 @@ Abaixo estão descritas as rotas do sistema.
    | Resource | Method | Params (JSON) | Headers |
 | :---:      | :---:  |    :---:      |    :---: |
 | /deliverymans    | GET  | {/} | JWT |
-| /deliverymans/:id    | GET  | {/} | {/} |
-| /deliverymans    | POST  | {email,name } | JWT |
+| /deliverymans/:id    | GET  | {/} | JWT|
+| /deliverymans    | POST  | {email,name, avatar_id } | JWT |
 | /deliverymans    | PUT  | {email, name, avatar_id } | JWT |
 | /deliverymans/:id    | DELETE  | {/} | JWT |
 
@@ -89,21 +89,6 @@ Abaixo estão descritas as rotas do sistema.
 ### **Funcionalidades do administrador**
 
 Abaixo estão descritas as funcionalidades que você deve adicionar em sua aplicação para administradores.
-
-### **1. Gestão de entregadores**
-
-Permita que o administrador possa cadastrar entregadores para a plataforma, o entregador deve possuir os seguintes campos:
-
-- id (id do entregador)
-- name (nome do entregador);
-- avatar_id (foto do entregador);
-- email (email do entregador)
-- created_at;
-- updated_at;
-
-Crie rotas para listagem/cadastro/atualização/remoção de entregadores;
-
-Obs.: Essa funcionalidade é para administradores autenticados na aplicação.
 
 ### **2. Gestão de encomendas**
 
