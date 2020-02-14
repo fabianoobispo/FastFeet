@@ -39,7 +39,7 @@ routes.post('/files', upload.single('file'), FileController.store);
 // Entrega
 routes.get('/deliveries/:id', DeliveryController.show);
 routes.post('/deliveries', DeliveryController.store);
-// routes.put('/deliveries/:deliveryId', DeliveryController.update);
-// routes.delete('/deliveries/:deliveryId', DeliveryController.delete);
+routes.put('/deliveries/:id', DeliveryController.update);
+routes.delete('/deliveries/:id', DeliveryController.delete);
 
 export default routes;

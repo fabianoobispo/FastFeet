@@ -3,7 +3,7 @@ import Delivery from '../models/Delivery';
 import Recipient from '../models/Recipient';
 import Deliveryman from '../models/DeliveryMan';
 import File from '../models/File';
-
+// import NewDelivery from '../jobs/NewDelivery';
 // import Queue from '../../lib/Queue';
 
 class DeliveryController {
@@ -56,7 +56,7 @@ class DeliveryController {
       });
     }
 
-    const { product, recipient_id, deliveryman_id } = req.body;
+    const { product, recipient_id, deliveryman_id, start_date } = req.body;
 
     const recipient = await Recipient.findByPk(recipient_id);
 
@@ -76,6 +76,7 @@ class DeliveryController {
       product,
       recipient_id,
       deliveryman_id,
+      start_date,
     });
 
     const delivery = await Delivery.findByPk(id, {
@@ -111,6 +112,68 @@ class DeliveryController {
     // });
 
     return res.json(delivery);
+  }
+
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      product: Yup.string(),
+      start_date: Yup.date(),
+      end_date: Yup.date(),
+      recipient_id: Yup.number(),
+      deliveryman_id: Yup.number(),
+      signature_id: Yup.number(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({
+        error: 'Validation fails',
+      });
+    }
+
+    if (!req.body) {
+      return res.status(400).json({
+        error: 'At least 1 atrribute should be updated',
+      });
+    }
+
+    const delivery = await Delivery.findByPk(req.params.id);
+
+    if (!delivery) {
+      res.status(400).json({ error: 'Delivery not found' });
+    }
+
+    const {
+      id,
+      product,
+      recipient_id,
+      signature_id,
+      deliveryman_id,
+      start_date,
+      end_date,
+      canceled_at,
+    } = await delivery.update(req.body);
+    return res.json({
+      id,
+      product,
+      recipient_id,
+      signature_id,
+      deliveryman_id,
+      start_date,
+      end_date,
+      canceled_at,
+    });
+  }
+
+  async delete(req, res) {
+    const delivery = await Delivery.findByPk(req.params.id);
+
+    if (!delivery) {
+      res.status(400).json({ error: 'Delivery not found' });
+    }
+
+    await delivery.destroy();
+
+    return res.json({ msg: 'Deleted with success' });
   }
 }
 
