@@ -3,8 +3,8 @@ import Delivery from '../models/Delivery';
 import Recipient from '../models/Recipient';
 import Deliveryman from '../models/DeliveryMan';
 import File from '../models/File';
-// import NewDelivery from '../jobs/NewDelivery';
-// import Queue from '../../lib/Queue';
+import NewDelivery from '../jobs/NewDelivery';
+import Queue from '../../lib/Queue';
 
 class DeliveryController {
   async show(req, res) {
@@ -56,7 +56,7 @@ class DeliveryController {
       });
     }
 
-    const { product, recipient_id, deliveryman_id, start_date } = req.body;
+    const { product, recipient_id, deliveryman_id } = req.body;
 
     const recipient = await Recipient.findByPk(recipient_id);
 
@@ -76,7 +76,6 @@ class DeliveryController {
       product,
       recipient_id,
       deliveryman_id,
-      start_date,
     });
 
     const delivery = await Delivery.findByPk(id, {
@@ -107,9 +106,9 @@ class DeliveryController {
       ],
     });
 
-    // await Queue.add(NewDelivery.key, {
-    // delivery,
-    // });
+    await Queue.add(NewDelivery.key, {
+      delivery,
+    });
 
     return res.json(delivery);
   }

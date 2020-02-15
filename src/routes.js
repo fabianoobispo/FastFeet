@@ -1,11 +1,13 @@
 import { Router } from 'express';
 import multer from 'multer';
+
 import multerConfig from './config/multer';
 
 import SessionController from './app/controllers/SessionController';
 import RecipientController from './app/controllers/RecipientController';
 import DeliveryManController from './app/controllers/DeliveryManController';
 import DeliveryController from './app/controllers/DeliveryController';
+import ScheduleController from './app/controllers/ScheduleController';
 
 import FileController from './app/controllers/FileController';
 
@@ -16,6 +18,14 @@ const upload = multer(multerConfig);
 
 // rotas sem autenticação
 routes.post('/sessions', SessionController.store);
+
+// retirada encomenda
+
+routes.get('/deliverymans/:deliverymanId/deliveries', ScheduleController.index);
+routes.put(
+  '/deliverymans/:deliverymanId/deliveries/:deliveryId',
+  ScheduleController.update
+);
 
 // rotas com autenticação
 routes.use(auth);
@@ -36,7 +46,7 @@ routes.delete('/recipient/:id', RecipientController.delete);
 // fotos
 routes.post('/files', upload.single('file'), FileController.store);
 
-// Entrega
+// criar entrega
 routes.get('/deliveries/:id', DeliveryController.show);
 routes.post('/deliveries', DeliveryController.store);
 routes.put('/deliveries/:id', DeliveryController.update);

@@ -25,10 +25,11 @@ cd FastFeet
 yarn
 ```
 
-### Subindo o banco
+### Subindo os bancos
 ```sh
 mkdir db
 docker run --name postgresfast -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
+docker run --name redisfast -p 6979:6379 -d -t redis:alpine
 ```
 
 
@@ -42,7 +43,10 @@ yarn sequelize db:seed:all
 ```sh
 yarn dev
 ```
-
+### Subindo a fila de jobs para envio de emails
+```sh
+yarn queue
+```
 ### Com autenticação JWT
 
 ### Realizando as devidas validaçôes
@@ -80,44 +84,19 @@ Abaixo estão descritas as rotas do sistema.
 | /deliverymans    | PUT  | {email, name, avatar_id } | JWT |
 | /deliverymans/:id    | DELETE  | {/} | JWT |
 
+  #### - Delivery (/deliverymans)
 
-
+   | Resource | Method | Params (JSON) | Headers |
+| :---:      | :---:  |    :---:      |    :---: |
+| /deliverymans/:id    | GET  | {/} | JWT|
+| /deliverymans    | POST  | {product, recipient_id, deliveryman_id } | JWT |
+| /deliverymans    | PUT  | {product, recipient_id, deliveryman_id, start_dat, end_date, canceled_at } | JWT |
+| /deliverymans/:id    | DELETE  | {/} | JWT |
 
 
 
 # para o desafio 03 falta fazer:
-### **Funcionalidades do administrador**
 
-Abaixo estão descritas as funcionalidades que você deve adicionar em sua aplicação para administradores.
-
-### **2. Gestão de encomendas**
-
-Apesar do entregador estar cadastrado, ele não é independente dentro da plataforma, e você deve cadastrar encomendas para os entregadores.
-
-Nessa funcionalidade criaremos um cadastro de encomendas por entregador, a encomenda possui os campos:
-
-- id (id da entrega)
-- recipient_id (referência ao destinatário);
-- deliveryman_id (referência ao entregador);
-- signature_id (referência à uma assinatura do destinatário, que será uma imagem);
-- product (nome do produto a ser entregue);
-- canceled_at (data de cancelamento, se cancelada);
-- start_date (data de retirada do produto);
-- end_date (data final da entrega);
-- created_at;
-- updated_at;
-
-A **data de início** deve ser cadastrada assim que for feita a retirada do produto pelo entregador, e as retiradas só podem ser feitas entre as 08:00 e 18:00h.
-
-A **data de término** da entrega deve ser cadastrada quando o entregador finalizar a entrega:
-
-Os campos **recipient_id** e **deliveryman_id** devem ser cadastrados no momento que for cadastrada a encomenda.
-
-Quando a encomenda é **cadastrada** para um entregador, o entregador recebe um e-mail com detalhes da encomenda, com nome do produto e uma mensagem informando-o que o produto já está disponível para a retirada.
-
-Crie rotas para listagem/cadastro/atualização/remoção de encomendas;
-
-Obs.: Essa funcionalidade é para administradores autenticados na aplicação.
 
 ### **Funcionalidades do entregador**
 
