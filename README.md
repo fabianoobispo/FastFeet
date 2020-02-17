@@ -102,49 +102,21 @@ Abaixo estão descritas as rotas do sistema.
 | /deliverymans/:deliverymanId/deliveries  | GET  | {/} | {/} |
 | /deliverymans/:deliverymanId/deliveries/:deliveryId    | PUT  | { start_date } | {/} |
 
-  #### -Problems
-  
-     | Resource | Method | Params (JSON) | Headers |
-| :---:      | :---:  |    :---:      |    :---: |
-| /deliveries/:deliveryId/problems | POST  | { description } | {/} |
-| /problems   | GET |  {/}  | JWT  |
-| /problems/:deliveryId | GET  | { ID } | JWT  |
-| /problems/:problemId  | DELETE  | { ID } |JWT  |
 
+ #### - Problems 
+
+   | Resource | Method | Params (JSON) | Headers |
+| :---:      | :---:  |    :---:      |    :---: |
+| /deliveries/:deliveryId/problems   | POST  | {description} | JWT|
+| /problems   | GET  | {/} | JWT |
+| /problems/:deliveryId    | GET  | {ID} | JWT |
+| /problems/:problemId    | DELETE  | {ID} | JWT |
+
+
+  
 
 # para o desafio 03 falta fazer:
 
-
-### **Funcionalidades do entregador**
-
-Abaixo estão descritas as funcionalidades que você deve adicionar em sua aplicação para os entregadores.
-
-### 3. Cadastrar problemas nas entregas
-
-O entregador nem sempre conseguirá entregar as encomendas com sucesso, algumas vezes o destinatário pode estar ausente, ou o próprio entregador poderá ter algum problema com seu veículo na hora de entregar.
-
-A tabela `delivery_problems` deve conter os seguintes campos:
-
-- delivery_id (referência da encomenda);
-- description (descrição do problema que o entregador teve);
-- created_at;
-- updated_at;
-
-Crie uma rota para a distribuidora listar todas as entregas com algum problema;
-
-Crie uma rota para listar todos os problemas de uma encomenda baseado no ID da encomenda.
-
-Exemplo de requisição: `GET https://fastfeet.com/delivery/2/problems`
-
-Crie uma rota para o entregador cadastrar problemas na entrega apenas informando seu ID de cadastro (ID da encomenda no banco de dados);
-
-Exemplo de requisição: `POST https://fastfeet.com/delivery/3/problems`
-
-Crie uma rota para a distribuidora cancelar uma entrega baseado no ID do problema. Esse cancelamento pode acontecer devido a gravidade do problema da entrega, por exemplo, em caso de perda da encomenda.
-
-Exemplo de requisição: `DELETE https://fastfeet.com/problem/1/cancel-delivery`
-
-Quando uma encomenda for cancelada, o entregador deve receber um e-mail informando-o sobre o cancelamento
 
 
 
