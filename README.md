@@ -9,9 +9,9 @@
 
 <p>Esse desafio faz parte do Desafio Final, que é uma aplicação completa (Back-end, Front-end e Mobile) que é avaliada para emissão do Certificado do Bootcamp GoStack, por isso é fundamental que ele seja feito com muito empenho!</p>
 
-<p>Começando a primeira etapa dia 29/01 e treminada 05/03 de quatro partes. </p>
+<p>Começando a primeira etapa dia 29/01 e treminada 05/00 de quatro partes. </p>
 
-<p>Começando a segunda etapa dia / e treminada / de quatro partes. </p>
+<p>Começando a segunda etapa dia 06/02 e treminada 16/02 de quatro partes. </p>
 
 <p>Começando a terceira etapa dia / e treminada / de quatro partes. </p>
 
@@ -51,6 +51,7 @@ yarn queue
 
 ### Realizando as devidas validaçôes
 
+### Envio de email para nova entrega e concelamneto de entrega.
 
 ### **Rotas**
 
@@ -101,6 +102,13 @@ Abaixo estão descritas as rotas do sistema.
 | /deliverymans/:deliverymanId/deliveries  | GET  | {/} | {/} |
 | /deliverymans/:deliverymanId/deliveries/:deliveryId    | PUT  | { start_date } | {/} |
 
+  #### -Problems 
+     | Resource | Method | Params (JSON) | Headers |
+| :---:      | :---:  |    :---:      |    :---: |
+| /deliveries/:deliveryId/problems | POST  | { description } | {/} |
+| /problems   | GET |  {/}  | JWT  |
+| /problems/:deliveryId | GET  | { ID } | JWT  |
+| /problems/:problemId  | DELETE  | { ID } |JWT  |
 
 
 # para o desafio 03 falta fazer:
