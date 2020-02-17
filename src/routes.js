@@ -8,6 +8,8 @@ import RecipientController from './app/controllers/RecipientController';
 import DeliveryManController from './app/controllers/DeliveryManController';
 import DeliveryController from './app/controllers/DeliveryController';
 import ScheduleController from './app/controllers/ScheduleController';
+import DeliveredController from './app/controllers/DeliveredController';
+import DeliveryProblemsController from './app/controllers/DeliveryProblemsController';
 
 import FileController from './app/controllers/FileController';
 
@@ -20,11 +22,26 @@ const upload = multer(multerConfig);
 routes.post('/sessions', SessionController.store);
 
 // retirada encomenda
-
 routes.get('/deliverymans/:deliverymanId/deliveries', ScheduleController.index);
 routes.put(
   '/deliverymans/:deliverymanId/deliveries/:deliveryId',
   ScheduleController.update
+);
+
+// Entrega
+routes.get(
+  '/deliverymans/:deliverymanId/deliveried',
+  DeliveredController.index
+);
+routes.put(
+  '/deliverymans/:deliverymanId/deliveried/:deliveryId',
+  DeliveredController.update
+);
+
+// Problemas
+routes.post(
+  '/deliveries/:deliveryId/problems',
+  DeliveryProblemsController.store
 );
 
 // rotas com autenticação
@@ -51,5 +68,10 @@ routes.get('/deliveries/:id', DeliveryController.show);
 routes.post('/deliveries', DeliveryController.store);
 routes.put('/deliveries/:id', DeliveryController.update);
 routes.delete('/deliveries/:id', DeliveryController.delete);
+
+// Ver problemas
+routes.get('/problems', DeliveryProblemsController.index);
+routes.get('/problems/:deliveryId', DeliveryProblemsController.show);
+routes.delete('/problems/:problemId', DeliveryProblemsController.delete);
 
 export default routes;

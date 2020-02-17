@@ -7,8 +7,9 @@ import File from '../app/models/File';
 import Recipient from '../app/models/Recipient';
 import Deliveryman from '../app/models/DeliveryMan';
 import Delivery from '../app/models/Delivery';
+import DeliveryProblem from '../app/models/DeliveryProblem';
 
-const models = [User, File, Recipient, Deliveryman, Delivery];
+const models = [User, File, Recipient, Deliveryman, Delivery, DeliveryProblem];
 
 class Database {
   constructor() {
@@ -26,4 +27,4 @@ class Database {
 
 export default new Database();
 
-// para criar migration nova e yarn sequelize db:migration:create ou undo --name=create-users
+// para criar migration nova eyarn sequelize migration:generate --name=create-delivery-problems

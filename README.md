@@ -94,6 +94,14 @@ Abaixo estão descritas as rotas do sistema.
 | /deliverymans/:id    | DELETE  | {/} | JWT |
 
 
+  #### - Withdrawal of orders (/deliverymans)
+
+   | Resource | Method | Params (JSON) | Headers |
+| :---:      | :---:  |    :---:      |    :---: |
+| /deliverymans/:deliverymanId/deliveries  | GET  | {/} | {/} |
+| /deliverymans/:deliverymanId/deliveries/:deliveryId    | PUT  | { start_date } | {/} |
+
+
 
 # para o desafio 03 falta fazer:
 
@@ -101,20 +109,6 @@ Abaixo estão descritas as rotas do sistema.
 ### **Funcionalidades do entregador**
 
 Abaixo estão descritas as funcionalidades que você deve adicionar em sua aplicação para os entregadores.
-
-### **1. Visualizar encomendas**
-
-Para que o entregador possa visualizar suas encomendas, ele deverá informar apenas seu ID de cadastro (ID do entregador no banco de dados). Essa funcionalidade deve retornar as encomendas atribuidas a ele, que **não estejam entregues ou canceladas**;
-
-Permita também que ele liste apenas as encomendas que já foram **entregues** por ele, com base em seu ID de cadastro;
-
-Exemplo de requisição: `GET https://fastfeet.com/deliveryman/1/deliveries`
-
-### 2. Alterar status de encomendas
-
-Você deve permitir que o entregador tenha rotas para incluir uma data de retirada (start_date) e data de entrega (end_date) para as encomendas. O entregador só pode fazer **5 retiradas por dia**.
-
-Obs.: Para a funcionalidade de finalizar a entrega, você deverá permitir o envio de uma imagem que irá preencher o campo signature_id da tabela de encomendas.
 
 ### 3. Cadastrar problemas nas entregas
 
