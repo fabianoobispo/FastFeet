@@ -1,7 +1,11 @@
 import React from 'react';
 
-// import { Container } from './styles';
+import logo from '~/assets/logo.svg';
 
 export default function SingIn() {
-  return <h1>signin</h1>;
+  return (
+    <>
+      <img src={logo} alt="FastFeet" />
+    </>
+  );
 }
