@@ -7,19 +7,23 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
+      product: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       recipient_id: {
         type: Sequelize.INTEGER,
         references: { model: 'recipients', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
-        allowNull: true,
+        allowNull: false,
       },
       deliveryman_id: {
         type: Sequelize.INTEGER,
         references: { model: 'deliverymans', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
-        allowNull: true,
+        allowNull: false,
       },
       signature_id: {
         type: Sequelize.INTEGER,
@@ -28,7 +32,7 @@ module.exports = {
         onDelete: 'SET NULL',
         allowNull: true,
       },
-      product: {
+      status: {
         type: Sequelize.STRING,
         allowNull: false,
       },
