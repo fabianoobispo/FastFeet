@@ -3,24 +3,16 @@
 </h1>
 
 <h3 align="center">
-  Desafio  FastFeet, o início
+  Desafio  FastFeet
 </h3>
-
-
-<p>Esse desafio faz parte do Desafio Final, que é uma aplicação completa (Back-end, Front-end e Mobile) que é avaliada para emissão do Certificado do Bootcamp GoStack, por isso é fundamental que ele seja feito com muito empenho!</p>
-
-<p>Começando a primeira etapa dia 29/01 e treminada 05/00 de quatro partes. </p>
-
-<p>Começando a segunda etapa dia 06/02 e treminada 16/02 de quatro partes. </p>
-
-<p>Começando a terceira etapa dia / e treminada / de quatro partes. </p>
-
-<p>Começando a quarta etapa dia / e treminada / de quatro partes. </p>
-
 
 ### :memo: Sobre a aplicação
 
-Esta é uma API REST construída para uma transportadora fictícia, A FastFeet. Toda a API é escrita em NodeJs usando MVC, banco de dados PostgreSQL.
+Esta é uma aplicação construída para uma transportadora fictícia, a FastFeet, usando Node, React, React Native.
+
+- **API:** NodeJs usando MVC, banco de dados PostgreSQL, mongo e redis. Com autenticação JWt 
+- **WEB:** React .....
+- **MOBILE:** React Native...
 
 ### :bookmark_tabs: **Funcionalidades de administrador**
 
@@ -52,6 +44,7 @@ yarn
 mkdir db
 docker run --name postgresfast -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
 docker run --name redisfast -p 6979:6379 -d -t redis:alpine
+docker run --name mongofast -p 27017:27017 -d -t mongo
 ```
 
 
