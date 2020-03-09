@@ -7,6 +7,42 @@ import NewDelivery from '../jobs/NewDelivery';
 import Queue from '../../lib/Queue';
 
 class DeliveryController {
+  async index(req, res) {
+    const { page = 1 } = req.query;
+
+    const deliverymans = await Delivery.findAll({
+      limit: 5,
+      offset: (page - 1) * 20,
+      attributes: ['id', 'product', 'start_date', 'end_date', 'canceled_at'],
+      include: [
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: ['id', 'name', 'zip_code', 'number', 'complement'],
+        },
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attributes: ['id', 'name'],
+          include: [
+            {
+              model: File,
+              as: 'avatar',
+              attributes: ['id', 'name', 'path', 'url'],
+            },
+          ],
+        },
+        {
+          model: File,
+          as: 'signature',
+          attributes: ['id', 'name', 'path', 'url'],
+        },
+      ],
+    });
+
+    return res.json(deliverymans);
+  }
+
   async show(req, res) {
     const delivery = await Delivery.findByPk(req.params.id, {
       attributes: ['id', 'product', 'start_date', 'end_date', 'canceled_at'],

@@ -64,6 +64,7 @@ routes.delete('/recipient/:id', RecipientController.delete);
 routes.post('/files', upload.single('file'), FileController.store);
 
 // criar entrega
+routes.get('/deliveries', DeliveryController.index);
 routes.get('/deliveries/:id', DeliveryController.show);
 routes.post('/deliveries', DeliveryController.store);
 routes.put('/deliveries/:id', DeliveryController.update);
