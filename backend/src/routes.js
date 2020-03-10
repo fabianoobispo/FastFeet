@@ -5,7 +5,7 @@ import multerConfig from './config/multer';
 
 import SessionController from './app/controllers/SessionController';
 import RecipientController from './app/controllers/RecipientController';
-import DeliverymanController from './app/controllers/DeliverymanController';
+import DeliverymanController from './app/controllers/DeliveryManController';
 import FileController from './app/controllers/FileController';
 import DeliveryController from './app/controllers/DeliveryController';
 import DeliveryPendingController from './app/controllers/DeliveryPendingController';

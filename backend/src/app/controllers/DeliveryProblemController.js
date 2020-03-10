@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 
 import Delivery from '../models/Delivery';
 import Recipient from '../models/Recipient';
-import Deliveryman from '../models/Deliveryman';
+import Deliveryman from '../models/DeliveryMan';
 // import File from '../models/File';
 
 import Queue from '../../lib/Queue';

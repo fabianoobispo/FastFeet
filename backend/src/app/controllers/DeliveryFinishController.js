@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 
-import Deliveryman from '../models/Deliveryman';
+import Deliveryman from '../models/DeliveryMan';
 import Delivery from '../models/Delivery';
 import File from '../models/File';
 

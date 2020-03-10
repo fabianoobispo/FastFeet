@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { Op } from 'sequelize';
 
 import Delivery from '../models/Delivery';
-import Deliveryman from '../models/Deliveryman';
+import Deliveryman from '../models/DeliveryMan';
 import Recipient from '../models/Recipient';
 import File from '../models/File';
 

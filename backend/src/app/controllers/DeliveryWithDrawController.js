@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { parseISO, isAfter, isBefore, setHours } from 'date-fns';
 
-import Deliveryman from '../models/Deliveryman';
+import Deliveryman from '../models/DeliveryMan';
 import Delivery from '../models/Delivery';
 
 class DeliveryWithDrawController {
