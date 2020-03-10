@@ -6,22 +6,22 @@ class NewDelivery {
   }
 
   async handle({ data }) {
-    const { updatedDelivery, problem } = data;
+    const { deliveryman, product, recipient, description} = data;
 
     await Mail.sendMail({
-      to: `${updatedDelivery.deliveryman.name} <${updatedDelivery.deliveryman.email}>`,
+      to: `${deliveryman.name} <${deliveryman.email}>`,
       subject: 'Entrega cancelada',
       template: 'cancelDelivery',
       context: {
-        deliveryman: updatedDelivery.deliveryman.name,
-        product: updatedDelivery.product,
-        name: updatedDelivery.recipient.name,
-        cep: updatedDelivery.recipient.zip_code,
-        number: updatedDelivery.recipient.number,
-        complement: updatedDelivery.recipient.complement
-          ? updatedDelivery.recipient.complement
-          : 'Sem complemento',
-        problem: problem.description,
+        description,
+				deliveryman: deliveryman.name,
+				product,
+				recipient: recipient.name,
+				city: recipient.city,
+				state: recipient.state,
+				street: recipient.street,
+				number: recipient.number,
+				zip_code: recipient.zip_code,
       },
     });
   }

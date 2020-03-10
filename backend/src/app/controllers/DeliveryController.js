@@ -1,215 +1,245 @@
 import * as Yup from 'yup';
+
+import { Op } from 'sequelize';
+
 import Delivery from '../models/Delivery';
+import Deliveryman from '../models/Deliveryman';
 import Recipient from '../models/Recipient';
-import Deliveryman from '../models/DeliveryMan';
 import File from '../models/File';
-import NewDelivery from '../jobs/NewDelivery';
+
 import Queue from '../../lib/Queue';
+import CreationDeliveryMail from '../jobs/NewDelivery';
 
 class DeliveryController {
-  async index(req, res) {
-    const { page = 1 } = req.query;
+	async store(req, res) {
+		const schema = Yup.object().shape({
+			product: Yup.string().required(),
+			recipient_id: Yup.number().required(),
+			deliveryman_id: Yup.number().required(),
+		});
 
-    const deliverymans = await Delivery.findAll({
-      limit: 5,
-      offset: (page - 1) * 20,
-      attributes: ['id', 'product', 'start_date', 'end_date', 'canceled_at'],
-      include: [
-        {
-          model: Recipient,
-          as: 'recipient',
-          attributes: ['id', 'name', 'zip_code', 'number', 'complement'],
-        },
-        {
-          model: Deliveryman,
-          as: 'deliveryman',
-          attributes: ['id', 'name'],
-          include: [
-            {
-              model: File,
-              as: 'avatar',
-              attributes: ['id', 'name', 'path', 'url'],
-            },
-          ],
-        },
-        {
-          model: File,
-          as: 'signature',
-          attributes: ['id', 'name', 'path', 'url'],
-        },
-      ],
-    });
+		if (!(await schema.isValid(req.body))) {
+			return res.status(400).json({ error: 'validation fails' });
+		}
 
-    return res.json(deliverymans);
-  }
+		const { product, recipient_id, deliveryman_id } = req.body;
 
-  async show(req, res) {
-    const delivery = await Delivery.findByPk(req.params.id, {
-      attributes: ['id', 'product', 'start_date', 'end_date', 'canceled_at'],
-      include: [
-        {
-          model: Recipient,
-          as: 'recipient',
-          attributes: ['id', 'name', 'zip_code', 'number', 'complement'],
-        },
-        {
-          model: Deliveryman,
-          as: 'deliveryman',
-          attributes: ['id', 'name'],
-          include: [
-            {
-              model: File,
-              as: 'avatar',
-              attributes: ['id', 'name', 'path', 'url'],
-            },
-          ],
-        },
-        {
-          model: File,
-          as: 'signature',
-          attributes: ['id', 'name', 'path', 'url'],
-        },
-      ],
-    });
+		/*
+		 * Check if recipient exists
+		 */
+		const recipientExists = await Recipient.findByPk(recipient_id);
 
-    if (!delivery) {
-      return res.status(400).json({ error: 'Delivery not found' });
-    }
+		if (!recipientExists) {
+			return res.status(400).json({ error: 'Recipient does not exists' });
+		}
 
-    return res.json(delivery);
-  }
+		/*
+		 * Check if recipient exists
+		 */
+		const deliveryman = await Deliveryman.findByPk(deliveryman_id);
 
-  async store(req, res) {
-    const schema = Yup.object().shape({
-      product: Yup.string().required(),
-      recipient_id: Yup.number().required(),
-      deliveryman_id: Yup.number().required(),
-    });
+		if (!deliveryman) {
+			return res.status(400).json({ error: 'Delivery man does not exists' });
+		}
 
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({
-        error: 'Validation fails',
-      });
-    }
+		const {
+			id,
+			signature_id,
+			start_date,
+			end_date,
+			canceled_at,
+		} = await Delivery.create({
+			product,
+			recipient_id,
+			deliveryman_id,
+			status: 'PENDENTE',
+		});
 
-    const { product, recipient_id, deliveryman_id } = req.body;
+		await Queue.add(CreationDeliveryMail.key, {
+			deliveryman,
+			recipient: recipientExists,
+			product,
+		});
 
-    const recipient = await Recipient.findByPk(recipient_id);
+		return res.json({
+			id,
+			product,
+			recipient_id,
+			deliveryman_id,
+			signature_id,
+			start_date,
+			end_date,
+			canceled_at,
+		});
+	}
 
-    if (!recipient) {
-      return res.status(400).json({ error: 'This recipient does not exists' });
-    }
+	async show(req, res) {
+		const { id } = req.params;
 
-    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
+		const delivery = await Delivery.findByPk(id, {
+			attributes: ['id', 'product'],
+			include: [
+				{
+					model: Recipient,
+					as: 'recipient',
+					attributes: ['id', 'name'],
+				},
+				{
+					model: Deliveryman,
+					as: 'deliveryman',
+					attributes: ['id', 'name'],
+				},
+			],
+		});
 
-    if (!deliveryman) {
-      return res
-        .status(400)
-        .json({ error: 'This deliveryman does not exists' });
-    }
+		if (!delivery) {
+			return res.status(400).json({ error: 'Delivery does not exists' });
+		}
 
-    const { id } = await Delivery.create({
-      product,
-      recipient_id,
-      deliveryman_id,
-    });
+		return res.json(delivery);
+	}
 
-    const delivery = await Delivery.findByPk(id, {
-      attributes: ['id', 'product', 'start_date', 'end_date', 'canceled_at'],
-      include: [
-        {
-          model: Recipient,
-          as: 'recipient',
-          attributes: ['id', 'name', 'zip_code', 'number', 'complement'],
-        },
-        {
-          model: Deliveryman,
-          as: 'deliveryman',
-          attributes: ['id', 'name', 'email'],
-          include: [
-            {
-              model: File,
-              as: 'avatar',
-              attributes: ['id', 'name', 'path', 'url'],
-            },
-          ],
-        },
-        {
-          model: File,
-          as: 'signature',
-          attributes: ['id', 'name', 'path', 'url'],
-        },
-      ],
-    });
+	async index(req, res) {
+		const { q: productName, page = 1 } = req.query;
 
-    await Queue.add(NewDelivery.key, {
-      delivery,
-    });
+		const response = productName
+			? await Delivery.findAll({
+					where: {
+						product: {
+							[Op.iLike]: `${productName}%`,
+						},
+					},
+					order: ['id'],
+					attributes: [
+						'id',
+						'product',
+						'status',
+						'start_date',
+						'end_date',
+						'canceled_at',
+					],
+					include: [
+						{
+							model: Recipient,
+							as: 'recipient',
+							paranoid: false,
+							attributes: [
+								'id',
+								'name',
+								'street',
+								'number',
+								'city',
+								'state',
+								'zip_code',
+							],
+						},
+						{
+							model: Deliveryman,
+							as: 'deliveryman',
+							attributes: ['id', 'name'],
+						},
+						{
+							model: File,
+							as: 'signature',
+							attributes: ['id', 'url', 'path'],
+						},
+					],
+			  })
+			: await Delivery.findAll({
+					attributes: [
+						'id',
+						'product',
+						'status',
+						'start_date',
+						'end_date',
+						'canceled_at',
+					],
+					order: ['id'],
+					limit: 5,
+					offset: (page - 1) * 5,
+					include: [
+						{
+							model: Recipient,
+							paranoid: false,
+							as: 'recipient',
+							attributes: [
+								'id',
+								'name',
+								'street',
+								'number',
+								'city',
+								'state',
+								'zip_code',
+							],
+						},
+						{
+							model: Deliveryman,
+							as: 'deliveryman',
+							attributes: ['id', 'name'],
+						},
+						{
+							model: File,
+							as: 'signature',
+							attributes: ['id', 'url', 'path'],
+						},
+					],
+			  });
 
-    return res.json(delivery);
-  }
+		return res.json(response);
+	}
 
-  async update(req, res) {
-    const schema = Yup.object().shape({
-      product: Yup.string(),
-      start_date: Yup.date(),
-      end_date: Yup.date(),
-      recipient_id: Yup.number(),
-      deliveryman_id: Yup.number(),
-      signature_id: Yup.number(),
-    });
+	async update(req, res) {
+		const schema = Yup.object().shape({
+			product: Yup.string().notRequired(),
+			recipient_id: Yup.number().notRequired(),
+			deliveryman_id: Yup.number().notRequired(),
+		});
 
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({
-        error: 'Validation fails',
-      });
-    }
+		if (!(await schema.isValid(req.body))) {
+			return res.status(400).json({ error: 'validation fails' });
+		}
 
-    if (!req.body) {
-      return res.status(400).json({
-        error: 'At least 1 atrribute should be updated',
-      });
-    }
+		const { id } = req.params;
 
-    const delivery = await Delivery.findByPk(req.params.id);
+		/*
+		 * Check if delivery exists
+		 */
+		const delivery = await Delivery.findByPk(id);
 
-    if (!delivery) {
-      res.status(400).json({ error: 'Delivery not found' });
-    }
+		if (!delivery) {
+			return res.status(400).json({ error: 'Delivery does not exists' });
+		}
 
-    const {
-      id,
-      product,
-      recipient_id,
-      signature_id,
-      deliveryman_id,
-      start_date,
-      end_date,
-      canceled_at,
-    } = await delivery.update(req.body);
-    return res.json({
-      id,
-      product,
-      recipient_id,
-      signature_id,
-      deliveryman_id,
-      start_date,
-      end_date,
-      canceled_at,
-    });
-  }
+		const { product, recipient_id, deliveryman_id } = req.body;
 
-  async delete(req, res) {
-    const delivery = await Delivery.findByPk(req.params.id);
+		await delivery.update({ product, recipient_id, deliveryman_id });
 
-    if (!delivery) {
-      res.status(400).json({ error: 'Delivery not found' });
-    }
+		return res.json({});
+	}
 
-    await delivery.destroy();
+	async destroy(req, res) {
+		const { id } = req.params;
 
-    return res.json({ msg: 'Deleted with success' });
-  }
+		/*
+		 * Check if delivery exists
+		 */
+		const delivery = await Delivery.findByPk(id);
+
+		if (!delivery) {
+			return res.status(400).json({ error: 'Delivery does not exists' });
+		}
+
+		/*
+		 * Checks if delivery was got
+		 */
+		if (delivery.start_date) {
+			return res.status(400).json({ error: 'This Delivery already been sent' });
+		}
+
+		await delivery.destroy();
+
+		return res.json({});
+	}
 }
 
 export default new DeliveryController();

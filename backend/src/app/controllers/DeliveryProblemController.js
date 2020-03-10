@@ -6,7 +6,7 @@ import Deliveryman from '../models/Deliveryman';
 // import File from '../models/File';
 
 import Queue from '../../lib/Queue';
-import CancelationDeliveryMail from '../jobs/CancelationDeliveryMail';
+import CancelationDeliveryMail from '../jobs/CancelDelivery';
 
 import DeliveryProblem from '../schemas/DeliveryProblem';
 
