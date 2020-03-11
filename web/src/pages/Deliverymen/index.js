@@ -26,7 +26,8 @@ export default function Deliverymen() {
 
   useEffect(() => {
     loadDeliverymen();
-	}, [page]); //eslint-disable-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
   async function handleSearchDeliveryman(e) {
     setPage(1);

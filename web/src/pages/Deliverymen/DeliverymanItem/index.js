@@ -14,6 +14,7 @@ import { Container, MoreConainer } from './styles';
 
 export default function DeliverymanItem({ data, updateDeliverymen }) {
   async function handleDelete() {
+    // eslint-disable-next-line no-alert
     const confirm = window.confirm('Você tem certeza que deseja deletar isso?');
 
     if (!confirm) {
