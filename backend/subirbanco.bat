@@ -1,1 +1,1 @@
-docker start postgresfast redisfast mongofast
+docker start postgresfast redisfast

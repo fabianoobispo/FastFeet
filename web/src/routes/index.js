@@ -12,12 +12,16 @@ import DeliverymenForm from '~/pages/Deliverymen/Form';
 import Recipients from '~/pages/Recipients';
 import RecipientsForm from '~/pages/Recipients/Form';
 
+import Order from '~/pages/Order';
+
 import Route from './Route';
 
 export default function Routes() {
   return (
     <Switch>
       <Route path="/" exact component={SingIn} />
+
+      <Route path="/order" exact component={Order} isPrivate />
 
       <Route path="/deliveries" exact component={Delivery} isPrivate />
       <Route path="/deliveries/form" exact component={DeliveryForm} isPrivate />

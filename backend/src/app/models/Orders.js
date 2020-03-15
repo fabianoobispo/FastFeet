@@ -1,14 +1,15 @@
 import Sequelize, { Model } from 'sequelize';
 
-class Delivery extends Model {
+class Orders extends Model {
   static init(sequelize) {
     super.init(
       {
         product: Sequelize.STRING,
+        deliveryman_id: Sequelize.STRING,
+        recipient_id: Sequelize.STRING,
         canceled_at: Sequelize.DATE,
         start_date: Sequelize.DATE,
         end_date: Sequelize.DATE,
-        status: Sequelize.STRING,
       },
       {
         sequelize,
@@ -25,13 +26,13 @@ class Delivery extends Model {
     });
     this.belongsTo(models.Deliveryman, {
       foreignKey: 'deliveryman_id',
-      as: 'deliveryman',
+      as: 'deliverymen',
     });
-    this.belongsTo(models.File, {
+    this.belongsTo(models.Files, {
       foreignKey: 'signature_id',
       as: 'signature',
     });
   }
 }
 
-export default Delivery;
+export default Orders;

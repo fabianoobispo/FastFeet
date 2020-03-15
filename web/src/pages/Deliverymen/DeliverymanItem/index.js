@@ -23,7 +23,7 @@ export default function DeliverymanItem({ data, updateDeliverymen }) {
     }
 
     try {
-      await api.delete(`/deliverymen/${data.id}`);
+      await api.delete(`/orders/${data.id}`);
       updateDeliverymen();
       toast.success('Entregador apagado com sucesso!');
     } catch (err) {
@@ -35,7 +35,7 @@ export default function DeliverymanItem({ data, updateDeliverymen }) {
     <Container>
       <small>#{data.id}</small>
       {data.avatar ? (
-        <img src={data?.avatar?.url} alt="AvatarUrl" />
+        <img src={data.avatar.url} alt="AvatarUrl" />
       ) : (
         <NamePhoto name={data.name} />
       )}

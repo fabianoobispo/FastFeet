@@ -3,32 +3,32 @@ import { MdAdd } from 'react-icons/md';
 
 import { parseISO, format } from 'date-fns';
 
-import { IconButton } from '~/components/Button';
 import { SearchInput } from '~/components/Form';
+import { IconButton } from '~/components/Button';
 import HeaderList from '~/components/HeaderList';
 import api from '~/services/api';
 import history from '~/services/history';
 
-import DeliveryItem from './DeliveryItem';
+import OrderItem from './OrderItem';
 import { Container, Content, Grid, Button } from './styles';
 
-export default function Delivery() {
-  const [deliveries, setDeliveries] = useState([]);
+export default function Order() {
+  const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(1);
 
   function formatDates(data) {
-    return data.map(delivery => ({
-      ...delivery,
-      start_dateFormated: delivery.start_date
-        ? format(parseISO(delivery.start_date), 'dd/MM/yyyy')
+    return data.map(order => ({
+      ...order,
+      start_dateFormated: order.start_date
+        ? format(parseISO(order.start_date), 'dd/MM/yyyy')
         : null,
-      end_dateFormated: delivery.end_date
-        ? format(parseISO(delivery.end_date), 'dd/MM/yyyy')
+      end_dateFormated: order.end_date
+        ? format(parseISO(order.end_date), 'dd/MM/yyyy')
         : null,
     }));
   }
 
-  async function handleSearchDelivery(e) {
+  async function handleSearchOrder(e) {
     setPage(1);
     const response = await api.get('/orders', {
       params: {
@@ -39,10 +39,10 @@ export default function Delivery() {
 
     const data = formatDates(response.data);
 
-    setDeliveries(data);
+    setOrders(data);
   }
 
-  async function loadDeliveries() {
+  async function loadOrders() {
     const response = await api.get('/orders', {
       params: {
         page,
@@ -51,26 +51,26 @@ export default function Delivery() {
 
     const data = formatDates(response.data);
 
-    setDeliveries(data);
+    setOrders(data);
   }
 
   useEffect(() => {
-    loadDeliveries();
-	}, [page]); //eslint-disable-line
+    loadOrders();
+  }, [page]); //eslint-disable-line
 
   return (
     <Container>
       <Content>
-        <HeaderList title="Gerenciando encomendas">
+        <HeaderList title="Gerenciando pedidos">
           <SearchInput
-            onChange={handleSearchDelivery}
+            onChange={handleSearchOrder}
             type="text"
-            placeholder="Buscar por encomendas"
+            placeholder="Buscar por pedido"
           />
           <IconButton
             Icon={MdAdd}
             title="CADASTRAR"
-            action={() => history.push('/deliveries/form')}
+            action={() => history.push('/order/form')}
             type="button"
           />
         </HeaderList>
@@ -85,12 +85,8 @@ export default function Delivery() {
             <strong>Status</strong>
             <strong>Ações</strong>
           </section>
-          {deliveries.map(delivery => (
-            <DeliveryItem
-              updateDeliveries={loadDeliveries}
-              key={delivery.id}
-              data={delivery}
-            />
+          {orders.map(order => (
+            <OrderItem updateOrder={loadOrders} key={order.id} data={order} />
           ))}
         </Grid>
         <section>
@@ -102,7 +98,7 @@ export default function Delivery() {
             voltar
           </Button>
           <Button
-            disabled={deliveries.length < 5}
+            disabled={orders.length < 5}
             type="button"
             onClick={() => setPage(page + 1)}
           >

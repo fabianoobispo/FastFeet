@@ -1,189 +1,141 @@
 import * as Yup from 'yup';
 import { Op } from 'sequelize';
 import Recipient from '../models/Recipient';
-import Delivery from '../models/Delivery';
 
 class RecipientController {
-	async store(req, res) {
-		const schema = Yup.object().shape({
-			name: Yup.string().required(),
-			street: Yup.string().required(),
-			number: Yup.number().required(),
-			complement: Yup.string().notRequired(),
-			state: Yup.string().required(),
-			city: Yup.string().required(),
-			zip_code: Yup.string().required(),
-		});
+  async store(req, res) {
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      street: Yup.string().required(),
+      number: Yup.string().required(),
+      city: Yup.string().required(),
+      postcode: Yup.string().required(),
+      country: Yup.string().required(),
+      complement: Yup.string(),
+    });
 
-		if (!(await schema.isValid(req.body))) {
-			return res.status(400).json({ error: 'validation fails' });
-		}
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
+    }
 
-		const {
-			name,
-			street,
-			number,
-			complement,
-			state,
-			city,
-			zip_code,
-		} = req.body;
+    const {
+      id,
+      name,
+      street,
+      number,
+      city,
+      postcode,
+      country,
+      complement,
+    } = await Recipient.create(req.body);
 
-		const { id } = await Recipient.create({
-			name,
-			street,
-			number,
-			complement,
-			state,
-			city,
-			zip_code,
-		});
+    return res.json({
+      id,
+      name,
+      street,
+      number,
+      city,
+      postcode,
+      country,
+      complement,
+    });
+  }
 
-		return res.json({
-			id,
-			name,
-			street,
-			number,
-			complement,
-			state,
-			city,
-			zip_code,
-		});
-	}
+  async update(req, res) {
+    const { id } = req.params;
+    const recipient = await Recipient.findByPk(id);
 
-	async update(req, res) {
-		const schema = Yup.object().shape({
-			name: Yup.string().required(),
-			street: Yup.string().required(),
-			number: Yup.number().required(),
-			complement: Yup.string().notRequired(),
-			state: Yup.string().required(),
-			city: Yup.string().required(),
-			zip_code: Yup.string().required(),
-		});
+    if (!recipient) {
+      return res.status(400).json({ error: 'Recipient does not exists' });
+    }
 
-		if (!(await schema.isValid(req.body))) {
-			return res.status(400).json({ error: 'validation fails' });
-		}
+    const schema = Yup.object().shape({
+      name: Yup.string(),
+      street: Yup.string(),
+      number: Yup.string(),
+      city: Yup.string(),
+      postcode: Yup.string(),
+      country: Yup.string(),
+      complement: Yup.string(),
+    });
 
-		const { id } = req.params;
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
+    }
 
-		const recipient = await Recipient.findByPk(id);
+    const {
+      name,
+      street,
+      number,
+      city,
+      postcode,
+      country,
+      complement,
+    } = req.body;
 
-		if (!recipient) {
-			return res.status(400).json({ error: 'Recipient does not exists' });
-		}
+    await recipient.update({
+      name,
+      street,
+      number,
+      city,
+      postcode,
+      country,
+      complement,
+    });
+    await recipient.save();
 
-		const {
-			name,
-			street,
-			number,
-			complement,
-			state,
-			city,
-			zip_code,
-		} = req.body;
+    return res.json(recipient);
+  }
 
-		await recipient.update({
-			name,
-			street,
-			number,
-			complement,
-			state,
-			city,
-			zip_code,
-		});
+  async index(req, res) {
+    const { q: recipientName, page = 1 } = req.query;
 
-		return res.json({});
-	}
+    if (recipientName) {
+      const name = await Recipient.findAll({
+        limit: 10,
+        offset: (page - 1) * 10,
+        order: [['id', 'DESC']],
+        where: {
+          name: {
+            [Op.iLike]: `%${recipientName}%`,
+          },
+        },
+      });
+      return res.json(name);
+    }
 
-	async index(req, res) {
-		const { q: recipientName, page = 1 } = req.query;
+    const recipient = await Recipient.findAll({
+      limit: 10,
+      offset: (page - 1) * 10,
+      order: [['id', 'DESC']],
+    });
 
-		const response = recipientName
-			? await Recipient.findAll({
-					where: {
-						name: {
-							[Op.iLike]: `${recipientName}%`,
-						},
-					},
-					attributes: [
-						'id',
-						'name',
-						'street',
-						'number',
-						'complement',
-						'state',
-						'city',
-						'zip_code',
-					],
-			  })
-			: await Recipient.findAll({
-					attributes: [
-						'id',
-						'name',
-						'street',
-						'number',
-						'complement',
-						'state',
-						'city',
-						'zip_code',
-					],
-					limit: 5,
-					offset: (page - 1) * 5,
-			  });
+    return res.json(recipient);
+  }
 
-		return res.json(response);
-	}
+  async show(req, res) {
+    const { id } = req.params;
+    const recipient = await Recipient.findByPk(id);
 
-	async show(req, res) {
-		const { id } = req.params;
+    if (!recipient) {
+      return res.status(400).json({ error: 'Recipient does not exists' });
+    }
 
-		const recipient = await Recipient.findByPk(id, {
-			attributes: [
-				'id',
-				'name',
-				'street',
-				'number',
-				'complement',
-				'state',
-				'city',
-				'zip_code',
-			],
-		});
+    return res.json(recipient);
+  }
 
-		if (!recipient) {
-			return res.status(400).json({ error: 'Recipient does not exists' });
-		}
+  async destroy(req, res) {
+    const { id } = req.params;
+    const recipient = await Recipient.findByPk(id);
 
-		return res.json(recipient);
-	}
+    if (!recipient) {
+      return res.status(400).json({ error: 'Recipient does not exists' });
+    }
 
-	async destroy(req, res) {
-		const { id } = req.params;
+    recipient.destroy();
 
-		const recipient = await Recipient.findByPk(id);
-
-		if (!recipient) {
-			return res.status(400).json({ error: 'Recipient does not exists' });
-		}
-
-		const deliveries = await Delivery.findOne({
-			where: {
-				recipient_id: recipient.id,
-				signature_id: null,
-			},
-		});
-
-		if (deliveries) {
-			return res
-				.status(400)
-				.json({ error: 'This Recipient still has an delivery to receive' });
-		}
-
-		await recipient.destroy();
-		return res.json({});
-	}
+    return res.json(recipient);
+  }
 }
 
 export default new RecipientController();

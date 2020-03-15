@@ -15,7 +15,7 @@ export default function Deliverymen() {
   const [page, setPage] = useState(1);
 
   async function loadDeliverymen() {
-    const response = await api.get('/deliverymen', {
+    const response = await api.get('/orders', {
       params: {
         page,
       },
@@ -32,9 +32,9 @@ export default function Deliverymen() {
   async function handleSearchDeliveryman(e) {
     setPage(1);
 
-    const response = await api.get('/deliverymen', {
+    const response = await api.get('/orders', {
       params: {
-        q: e.target.value,
+
         page,
       },
     });

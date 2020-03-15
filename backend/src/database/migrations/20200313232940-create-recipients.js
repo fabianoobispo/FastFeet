@@ -1,11 +1,13 @@
+const Sequelize = require('sequelize');
+
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: queryInterface => {
     return queryInterface.createTable('recipients', {
       id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
       },
       name: {
         type: Sequelize.STRING,
@@ -20,10 +22,10 @@ module.exports = {
         allowNull: false,
       },
       complement: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true,
       },
-      state: {
+      country: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -31,7 +33,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      zip_code: {
+      postcode: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -43,10 +45,6 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      deleted_at: {
-				type: Sequelize.DATE,
-				allowNull: true,
-			},
     });
   },
 

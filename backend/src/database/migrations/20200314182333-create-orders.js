@@ -1,40 +1,46 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('deliveries', {
+    return queryInterface.createTable('orders', {
       id: {
-        type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+        type: Sequelize.INTEGER,
+      },
+      recipient_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'recipients',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
+      },
+      deliveryman_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'deliverymans',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
+      },
+      signature_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: { model: 'files', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
       },
       product: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      recipient_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'recipients', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
-        allowNull: false,
-      },
-      deliveryman_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'deliverymans', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
-        allowNull: false,
-      },
-      signature_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'files', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+      canceled_at: {
+        type: Sequelize.DATE,
         allowNull: true,
-      },
-      status: {
-        type: Sequelize.STRING,
-        allowNull: false,
       },
       start_date: {
         type: Sequelize.DATE,
@@ -44,22 +50,17 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       },
-      canceled_at: {
-        type: Sequelize.DATE,
-        allowNull: true,
-      },
       created_at: {
-        type: Sequelize.DATE,
         allowNull: false,
+        type: Sequelize.DATE,
       },
       updated_at: {
-        type: Sequelize.DATE,
         allowNull: false,
+        type: Sequelize.DATE,
       },
     });
   },
-
   down: queryInterface => {
-    return queryInterface.dropTable('deliveries');
+    return queryInterface.dropTable('orders');
   },
 };
