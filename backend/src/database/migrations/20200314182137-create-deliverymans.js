@@ -16,6 +16,7 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
       },
       avatar_id: {
         type: Sequelize.INTEGER,
@@ -36,6 +37,6 @@ module.exports = {
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('deliverymen');
+    return queryInterface.dropTable('deliverymans');
   },
 };

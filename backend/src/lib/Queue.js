@@ -1,6 +1,6 @@
 import Bee from 'bee-queue';
-import NewDelivery from '../app/jobs/newOrder';
-import CancelDelivery from '../app/jobs/CancelOrder';
+import NewDelivery from '../app/jobs/NewOrderMail';
+import CancelDelivery from '../app/jobs/CancelOrderMail';
 import redisConfig from '../config/redis';
 
 const jobs = [NewDelivery, CancelDelivery];

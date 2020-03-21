@@ -3,13 +3,13 @@ import multer from 'multer';
 
 import multerConfig from './config/multer';
 
-import SessionController from './app/Controllers/SessionController';
-import RecipientController from './app/Controllers/RecipientController';
-import DeliverymanController from './app/Controllers/DeliverymanController';
-import OrderController from './app/Controllers/OrderController';
-import DeliveriesController from './app/Controllers/DeliveriesController';
-import DeliveredOrderController from './app/Controllers/DeliveredOrderController';
-import DeliveryProblemController from './app/Controllers/DeliveryProblemController';
+import SessionController from './app/controllers/SessionController';
+import UserController from './app/controllers/UserController';
+import RecipientController from './app/controllers/RecipientController';
+import DeliverymanController from './app/controllers/DeliverymanController';
+import OrderController from './app/controllers/OrderController';
+import DeliverymanOrderController from './app/controllers/DeliverymanOrderController';
+import DeliveryProblemController from './app/controllers/DeliveryProblemController';
 
 import FileController from './app/controllers/FileController';
 
@@ -20,45 +20,44 @@ const upload = multer(multerConfig);
 
 routes.post('/sessions', SessionController.store);
 
+routes.get('/deliverymans/:id', DeliverymanController.index);
+
+routes.get('/deliveryman/:id/orders', DeliverymanOrderController.index);
+routes.put(
+  '/deliveryman/:id/order/:orderId',
+  DeliverymanOrderController.update
+);
+
+routes.post('/delivery/:deliveryId/problems', DeliveryProblemController.store);
+routes.get('/delivery/:id/problems', DeliveryProblemController.index);
+
 routes.post('/files', upload.single('file'), FileController.store);
-
-routes.get('/orders/problems/list', DeliveryProblemController.index);
-routes.post('/orders/problems', DeliveryProblemController.store);
-routes.get('/orders/:orderId/problems', DeliveryProblemController.show);
-
-routes.get('/deliveryman/:id/deliveredorders', DeliveredOrderController.index);
-routes.put('/deliveryman/:id/deliveredorders', DeliveredOrderController.update);
-
-routes.get('/deliveryman/:id/deliveries', DeliveriesController.index);
-routes.put('/deliveryman/:id/deliveries', DeliveriesController.update);
-
-routes.get('/orders', OrderController.index);
-routes.get('/orders/:id', OrderController.show);
-
-routes.get('/deliveryman/:id', DeliverymanController.show);
-routes.get('/deliveryman/', DeliverymanController.index);
-
-routes.get('/recipients/:id', RecipientController.show);
-routes.get('/recipients/', RecipientController.index);
 
 // rotas com autenticação
 routes.use(auth);
 
+
+routes.post('/users', UserController.store);
+
+routes.get('/recipients', RecipientController.index);
+routes.get('/recipients/:id', RecipientController.index);
 routes.post('/recipients', RecipientController.store);
 routes.put('/recipients/:id', RecipientController.update);
-routes.delete('/recipients/:id', RecipientController.destroy);
+routes.delete('/recipients/:id', RecipientController.delete);
 
-routes.post('/deliveryman', DeliverymanController.store);
-routes.put('/deliveryman/:id', DeliverymanController.update);
-routes.delete('/deliveryman/:id', DeliverymanController.destroy);
+routes.get('/deliverymans', DeliverymanController.index);
 
+routes.post('/deliverymans', DeliverymanController.store);
+routes.put('/deliverymans/:id', DeliverymanController.update);
+routes.delete('/deliverymans/:id', DeliverymanController.delete);
+
+routes.get('/orders', OrderController.index);
 routes.post('/orders', OrderController.store);
 routes.put('/orders/:id', OrderController.update);
+routes.delete('/orders/:id', OrderController.delete);
 
-routes.get('/orders/:orderId/problems', DeliveryProblemController.show);
-routes.delete(
-  '/problem/:orderId/cancel-delivery',
-  DeliveryProblemController.destroy
-);
+routes.get('/delivery-problems', DeliveryProblemController.index);
+routes.delete('/problem/:id/cancel-delivery', DeliveryProblemController.delete);
+
 
 export default routes;

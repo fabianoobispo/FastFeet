@@ -2,10 +2,10 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('orders', {
       id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
       },
       recipient_id: {
         type: Sequelize.INTEGER,

@@ -44,7 +44,7 @@ yarn
 mkdir db
 docker run --name postgresfast -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
 docker run --name redisfast -p 6979:6379 -d -t redis:alpine
-docker run --name mongofast -p 27017:27017 -d -t mongo
+
 ```
 
 

@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      country: {
+      state: {
         type: Sequelize.STRING,
         allowNull: false,
       },

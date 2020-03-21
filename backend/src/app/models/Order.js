@@ -5,8 +5,6 @@ class Orders extends Model {
     super.init(
       {
         product: Sequelize.STRING,
-        deliveryman_id: Sequelize.STRING,
-        recipient_id: Sequelize.STRING,
         canceled_at: Sequelize.DATE,
         start_date: Sequelize.DATE,
         end_date: Sequelize.DATE,
@@ -26,9 +24,9 @@ class Orders extends Model {
     });
     this.belongsTo(models.Deliveryman, {
       foreignKey: 'deliveryman_id',
-      as: 'deliverymen',
+      as: 'deliveryman',
     });
-    this.belongsTo(models.Files, {
+    this.belongsTo(models.File, {
       foreignKey: 'signature_id',
       as: 'signature',
     });

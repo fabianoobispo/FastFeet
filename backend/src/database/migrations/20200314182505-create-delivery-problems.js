@@ -7,7 +7,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      order_id: {
+      delivery_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {

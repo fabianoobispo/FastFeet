@@ -1,230 +1,168 @@
 import * as Yup from 'yup';
 import { Op } from 'sequelize';
 
-import Orders from '../models/Orders';
+import Order from '../models/Order';
 import Recipient from '../models/Recipient';
-import Deliveryman from '../models/DeliveryMan';
-import Files from '../models/Files';
+import Deliveryman from '../models/Deliveryman';
+import File from '../models/File';
 
 import Queue from '../../lib/Queue';
-import newOrder from '../jobs/newOrder';
+import NewOrderMail from '../jobs/NewOrderMail';
 
 class OrderController {
   async index(req, res) {
-    const { q: productName, page = 1 } = req.query;
+    const { page, q } = req.query;
+    const atualPage = page || '1';
+    const name = q || '';
 
-    if (productName) {
-      const product = await Orders.findAll({
-        where: {
-          product: {
-            [Op.iLike]: `%${productName}%`,
-          },
+    const orders = await Order.findAndCountAll({
+      where: {
+        product: { [Op.iLike]: `%${name}%` },
+      },
+      include: [
+        {
+          model: File,
+          as: 'signature',
+          attributes: ['name', 'path', 'url'],
         },
-        limit: 10,
-        offset: (page - 1) * 10,
-        order: [['id', 'DESC']],
-        attributes: [
-          'id',
-          'product',
-          'canceled_at',
-          'start_date',
-          'end_date',
-          'signature_id',
-        ],
+        {
+          model: Recipient,
+          as: 'recipient',
+        },
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attributes: ['id', 'name'],
+          include: [
+            {
+              model: File,
+              as: 'avatar',
+              attributes: ['id', 'path', 'url'],
+            },
+          ],
+        },
+      ],
+      order: [['id', 'ASC']],
+      limit: 4,
+      offset: (atualPage - 1) * 4,
+    });
+    return res.json(orders);
+  }
+
+  async store(req, res) {
+    const schema = Yup.object().shape({
+      product: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res
+        .status(400)
+        .json({ error: 'Validation fails.' });
+    }
+
+    try {
+      const { id, deliveryman_id, product } = await Order.create(req.body);
+
+      const deliveryman = await Deliveryman.findByPk(deliveryman_id);
+
+      const order = await Order.findByPk(id, {
         include: [
-          {
-            model: Files,
-            as: 'signature',
-            attributes: ['url', 'path'],
-          },
-          {
-            model: Deliveryman,
-            as: 'deliveryman',
-            attributes: ['id', 'name'],
-            include: [
-              {
-                model: Files,
-                as: 'avatar',
-                attributes: ['url', 'path'],
-              },
-            ],
-          },
           {
             model: Recipient,
             as: 'recipient',
             attributes: [
-              'id',
               'name',
               'street',
-              'city',
-              'country',
               'number',
+              'complement',
+              'state',
+              'city',
               'postcode',
             ],
           },
         ],
       });
 
-      return res.status(200).json(product);
+      await Queue.add(NewOrderMail.key, {
+        deliveryman,
+        product,
+        order,
+      });
+
+      return res.json(order);
+    } catch (err) {
+      if (err.parent.constraint === 'orders_deliveryman_id_fkey') {
+        return res.status(400).json({ error: 'This deliveryman does not exist.' });
+      }
+
+      if (err.parent.constraint === 'orders_recipient_id_fkey') {
+        return res.status(400).json({ error: 'This recipient does not exist' });
+      }
     }
-
-    const orders = await Orders.findAll({
-      limit: 10,
-      offset: (page - 1) * 10,
-      order: [['id', 'DESC']],
-      attributes: [
-        'id',
-        'product',
-        'canceled_at',
-        'start_date',
-        'end_date',
-        'signature_id',
-      ],
-      include: [
-        {
-          model: Files,
-          as: 'signature',
-          attributes: ['url', 'path'],
-        },
-        {
-          model: Deliveryman,
-          as: 'deliveryman',
-          attributes: ['id', 'name'],
-          include: [
-            {
-              model: Files,
-              as: 'avatar',
-              attributes: ['url', 'path'],
-            },
-          ],
-        },
-        {
-          model: Recipient,
-          as: 'recipient',
-          attributes: [
-            'id',
-            'name',
-            'street',
-            'number',
-            'country',
-            'city',
-            'postcode',
-          ],
-        },
-      ],
-    });
-
-    return res.json(orders);
-  }
-
-  async show(req, res) {
-    const { id } = req.params;
-
-    const order = await Orders.findByPk(id, {
-      where: { canceled_at: null },
-      attributes: ['id', 'product', 'canceled_at', 'start_date', 'end_date'],
-      include: [
-        {
-          model: Deliveryman,
-          as: 'deliveryman',
-          attributes: ['id', 'name'],
-          include: [
-            {
-              model: Files,
-              as: 'avatar',
-              attributes: ['url', 'path'],
-            },
-          ],
-        },
-        {
-          model: Recipient,
-          as: 'recipient',
-          attributes: [
-            'id',
-            'name',
-            'street',
-            'number',
-            'city',
-            'postcode',
-            'country',
-          ],
-        },
-        {
-          model: Files,
-          as: 'signature',
-          attributes: ['url', 'path'],
-        },
-      ],
-    });
-
-    return res.json(order);
-  }
-
-  async store(req, res) {
-    const schema = Yup.object().shape({
-      product: Yup.string().required(),
-      recipient_id: Yup.number().required(),
-      deliveryman_id: Yup.number().required(),
-    });
-
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
-    }
-
-    const { product, recipient_id, deliveryman_id, id } = req.body;
-
-    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
-    if (!deliveryman) {
-      return res.status(401).json({ error: 'Deliveryman doest not exists.' });
-    }
-
-    const recipient = await Recipient.findByPk(recipient_id);
-    if (!recipient) {
-      return res.status(401).json({ error: 'Recipient doest not exists.' });
-    }
-
-    Orders.create({ product, recipient_id, deliveryman_id });
-
-    await Queue.add(newOrder.key, {
-      deliverymanName: deliveryman.name,
-      deliverymanEmail: deliveryman.email,
-      recipientName: recipient.name,
-      recipientStreet: recipient.street,
-      recipientNumber: recipient.number,
-      recipientCity: recipient.city,
-      recipientPostcode: recipient.postcode,
-      recipientCountry: recipient.country,
-      recipientComplement: recipient.complement,
-    });
-
-    return res.json({
-      id,
-      product,
-      recipient_id,
-      deliveryman_id,
-    });
+    return this;
   }
 
   async update(req, res) {
-    const { id } = req.params;
-    const schema = Yup.object().shape({
-      product: Yup.string(),
-      recipient_id: Yup.number(),
-      deliveryman_id: Yup.number(),
+      const schema = Yup.object().shape({
+      product: Yup.string().required(),
     });
 
-    const { product, recipient_id, deliveryman_id } = req.body;
-
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
+      return res
+        .status(400)
+        .json({ error: 'Validation fails'});
+      }
+
+      const { id } = req.params;
+
+      const order = await Order.findByPk(id);
+
+      if (!order) {
+        return res.status(400).json({ error: ' This order does not exist.' });
+      }
+
+      await order.update(req.body);
+
+      const {
+        recipient_id,
+        deliveryman_id,
+        signature_id,
+        product,
+        canceled_at,
+        start_date,
+        end_date,
+      } = await Order.findByPk(id);
+
+      return res.json({
+        id,
+        recipient_id,
+        deliveryman_id,
+        signature_id,
+        product,
+        canceled_at,
+        start_date,
+        end_date,
+      });
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    const order = await Order.findByPk(id);
+
+    if (!order) {
+      return res.status(400).json({ error: 'This order does not exist.' });
     }
 
-    const order = await Orders.findByPk(id);
+    await Order.destroy({
+      where: {
+        id,
+      },
+    });
 
-    order.update({ product, recipient_id, deliveryman_id });
-
-    return res.json(order);
+    return res.json({ success: 'The order was successfully deleted'});
   }
-}
 
+
+}
 export default new OrderController();
