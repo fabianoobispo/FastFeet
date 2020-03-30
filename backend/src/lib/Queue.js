@@ -1,9 +1,9 @@
 import Bee from 'bee-queue';
-import NewDelivery from '../app/jobs/NewOrderMail';
-import CancelDelivery from '../app/jobs/CancelOrderMail';
 import redisConfig from '../config/redis';
+import NewOrderMail from '../app/jobs/NewOrderMail';
+import CancelOrderMail from '../app/jobs/CancelOrderMail';
 
-const jobs = [NewDelivery, CancelDelivery];
+const jobs = [CancelOrderMail, NewOrderMail];
 
 class Queue {
   constructor() {
@@ -23,18 +23,20 @@ class Queue {
     });
   }
 
-  add(key, job) {
-    return this.queues[key].bee.createJob(job).save();
+  add(queue, job) {
+    return this.queues[queue].bee.createJob(job).save();
   }
 
-  proccessQueue() {
+  processQueue() {
     jobs.forEach(job => {
       const { bee, handle } = this.queues[job.key];
+
       bee.on('failed', this.handleFailure).process(handle);
     });
   }
 
   handleFailure(job, err) {
+    // eslint-disable-next-line no-console
     console.log(`Queue ${job.queue.name}: FAILED`, err);
   }
 }

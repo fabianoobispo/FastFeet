@@ -15,7 +15,10 @@ class DeliveryProblem extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Orders, { foreignKey: 'order_id', as: 'delivery' });
+    this.belongsTo(models.Orders, {
+      foreignKey: 'delivery_id',
+      as: 'delivery',
+    });
   }
 }
 

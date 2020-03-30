@@ -1,3 +1,5 @@
+require('dotenv/config');
+
 export default {
   host: process.env.MAIL_HOST,
   port: process.env.MAIL_PORT,
@@ -7,6 +9,6 @@ export default {
     pass: process.env.MAIL_PASS,
   },
   default: {
-    from: 'Equipe FastFeet <noreply@fasfeet.com>',
+    from: 'Equipe FastFeet <noreply@fastfeet.com>',
   },
 };

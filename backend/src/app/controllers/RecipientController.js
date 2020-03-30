@@ -4,88 +4,6 @@ import Recipient from '../models/Recipient';
 import Order from '../models/Order';
 
 class RecipientController {
-  async store(req, res) {
-    const schema = Yup.object().shape({
-      name: Yup.string().required(),
-      street: Yup.string().required(),
-      number: Yup.string().required(),
-      city: Yup.string().required(),
-      postcode: Yup.string().required(),
-      state: Yup.string().required(),
-    });
-
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
-    }
-
-    const {
-      id,
-      name,
-      street,
-      number,
-      city,
-      postcode,
-      state,
-      complement,
-    } = await Recipient.create(req.body);
-
-    return res.json({
-      id,
-      name,
-      street,
-      number,
-      city,
-      postcode,
-      state,
-      complement,
-    });
-  }
-
-  async update(req, res) {
-    const schema = Yup.object().shape({
-      name: Yup.string(),
-      street: Yup.string(),
-      number: Yup.string(),
-      city: Yup.string(),
-      postcode: Yup.string(),
-      state: Yup.string(),
-      complement: Yup.string(),
-    });
-
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
-    }
-
-    const { id } = req.params;
-
-    const recipient = await Recipient.findByPk(id);
-
-    if (!recipient) {
-      return res.status(400).json({ error: 'This recipient does not exist' });
-    }
-
-    const {
-      name,
-      street,
-      number,
-      city,
-      postcode,
-      state,
-      complement,
-    } =  await recipient.update(req.body);
-
-
-    return res.json({
-      name,
-      street,
-      number,
-      city,
-      postcode,
-      state,
-      complement,
-    });
-  }
-
   async index(req, res) {
     const { id } = req.params;
     const { page, q } = req.query;
@@ -106,13 +24,90 @@ class RecipientController {
     return res.json(recipients);
   }
 
-  async delete(req, res) {
+  async store(req, res) {
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      street: Yup.string().required(),
+      complement: Yup.string(),
+      state: Yup.string().required(),
+      city: Yup.string().required(),
+      cep: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res
+        .status(400)
+        .json({ error: 'Erro de validação, confira seus dados.' });
+    }
+
+    const {
+      id,
+      name,
+      street,
+      complement,
+      state,
+      city,
+      cep,
+    } = await Recipient.create(req.body);
+
+    return res.json({ id, name, street, complement, state, city, cep });
+  }
+
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      name: Yup.string(),
+      street: Yup.string(),
+      complement: Yup.string(),
+      state: Yup.string(),
+      city: Yup.string(),
+      cep: Yup.string(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res
+        .status(400)
+        .json({ error: 'Erro de validação, confira seus dados.' });
+    }
+
     const { id } = req.params;
+
     const recipient = await Recipient.findByPk(id);
 
     if (!recipient) {
-      return res.status(400).json({ error: 'Recipient does not exists' });
+      return res.status(400).json({ error: 'Este destinatário não existe' });
     }
+
+    const {
+      name,
+      street,
+      number,
+      complement,
+      state,
+      city,
+      cep,
+    } = await recipient.update(req.body);
+
+    return res.json({
+      id,
+      name,
+      street,
+      number,
+      complement,
+      state,
+      city,
+      cep,
+    });
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    const recipient = await Recipient.findByPk(id);
+
+    if (!recipient) {
+      return res.status(400).json({ error: 'Este destinatário não existe' });
+    }
+
     const hasOrder = await Order.findOne({
       where: {
         recipient_id: id,
@@ -121,7 +116,7 @@ class RecipientController {
 
     if (hasOrder) {
       return res.status(400).json({
-        error: 'This recipient has orders, you cannot delete.',
+        error: 'Este destinatário possui encomendas, não é possível excluir.',
       });
     }
 
@@ -131,9 +126,8 @@ class RecipientController {
       },
     });
 
-    return res.json({ success: 'The recipient has been successfully deleted!' });
+    return res.json({ success: 'O destinatário foi excluído com sucesso!' });
   }
-  }
-
+}
 
 export default new RecipientController();

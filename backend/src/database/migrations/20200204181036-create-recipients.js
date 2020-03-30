@@ -1,13 +1,11 @@
-const Sequelize = require('sequelize');
-
 module.exports = {
-  up: queryInterface => {
+  up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('recipients', {
       id: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
         allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
       },
       name: {
         type: Sequelize.STRING,
@@ -18,12 +16,11 @@ module.exports = {
         allowNull: false,
       },
       number: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       complement: {
-        type: Sequelize.TEXT,
-        allowNull: true,
+        type: Sequelize.STRING,
       },
       state: {
         type: Sequelize.STRING,
@@ -33,7 +30,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      postcode: {
+      cep: {
         type: Sequelize.STRING,
         allowNull: false,
       },

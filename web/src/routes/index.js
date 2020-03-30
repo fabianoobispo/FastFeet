@@ -2,19 +2,26 @@ import React from 'react';
 import { Switch } from 'react-router-dom';
 
 import SingIn from '~/pages/SingIn';
+import Route from './Route';
 
+import Order from '~/pages/Order';
+
+{
+  /*
 import Delivery from '~/pages/Delivery';
 import DeliveryForm from '~/pages/Delivery/Form';
 
-import Deliverymen from '~/pages/Deliverymen';
-import DeliverymenForm from '~/pages/Deliverymen/Form';
 
 import Recipients from '~/pages/Recipients';
 import RecipientsForm from '~/pages/Recipients/Form';
 
-import Order from '~/pages/Order';
+import Deliverymen from '~/pages/Deliverymen';
+import DeliverymenForm from '~/pages/Deliverymen/Form';
 
-import Route from './Route';
+
+import Order from '~/pages/Order';
+*/
+}
 
 export default function Routes() {
   return (
@@ -23,6 +30,7 @@ export default function Routes() {
 
       <Route path="/order" exact component={Order} isPrivate />
 
+      {/*
       <Route path="/deliveries" exact component={Delivery} isPrivate />
       <Route path="/deliveries/form" exact component={DeliveryForm} isPrivate />
       <Route
@@ -45,6 +53,7 @@ export default function Routes() {
         component={DeliverymenForm}
         isPrivate
       />
+
       <Route path="/recipients" exact component={Recipients} isPrivate />
       <Route
         path="/recipients/form"
@@ -58,6 +67,7 @@ export default function Routes() {
         component={RecipientsForm}
         isPrivate
       />
+       */}
     </Switch>
   );
 }

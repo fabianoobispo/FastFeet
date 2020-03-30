@@ -9,30 +9,24 @@ module.exports = {
       },
       recipient_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'recipients',
-          key: 'id',
-        },
+        references: { model: 'recipients', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
+        allowNull: true,
       },
       deliveryman_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'deliverymans',
-          key: 'id',
-        },
+        references: { model: 'deliverymans', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
+        allowNull: true,
       },
       signature_id: {
         type: Sequelize.INTEGER,
-        allowNull: true,
         references: { model: 'files', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
+        allowNull: true,
       },
       product: {
         type: Sequelize.STRING,
@@ -51,15 +45,16 @@ module.exports = {
         allowNull: true,
       },
       created_at: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
       },
       updated_at: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
       },
     });
   },
+
   down: queryInterface => {
     return queryInterface.dropTable('orders');
   },

@@ -21,7 +21,7 @@ class NewOrderMail {
         complement: order.recipient.complement,
         state: order.recipient.state,
         city: order.recipient.city,
-        postcode: order.recipient.postcode,
+        cep: order.recipient.cep,
       },
     });
   }

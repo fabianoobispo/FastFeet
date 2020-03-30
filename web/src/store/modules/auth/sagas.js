@@ -21,7 +21,7 @@ export function* singIn({ payload }) {
 
     yield put(signInSuccess(token, user));
 
-    history.push('/deliveries');
+    history.push('/order');
   } catch (err) {
     toast.error('Falha na autenticação, verifique seus dados');
     yield put(signFailure());

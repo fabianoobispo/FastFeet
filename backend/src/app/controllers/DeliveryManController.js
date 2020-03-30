@@ -1,18 +1,30 @@
 import * as Yup from 'yup';
-
 import { Op } from 'sequelize';
 import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
 
 class DeliverymanController {
   async index(req, res) {
-  const { id } = req.params;
-  const { page, q } = req.query;
-  const atualPage = page || '1';
-  const name = q || '';
+    const { id } = req.params;
+    const { page, q } = req.query;
+    const atualPage = page || '1';
+    const name = q || '';
 
-  if (id) {
-    const deliveryman = await Deliveryman.findByPk(id, {
+    if (id) {
+      const deliveryman = await Deliveryman.findByPk(id, {
+        include: [
+          {
+            model: File,
+            as: 'avatar',
+            attributes: ['name', 'path', 'url'],
+          },
+        ],
+      });
+      return res.json(deliveryman);
+    }
+
+    const deliverymans = await Deliveryman.findAndCountAll({
+      where: { name: { [Op.iLike]: `%${name}%` } },
       include: [
         {
           model: File,
@@ -20,24 +32,11 @@ class DeliverymanController {
           attributes: ['name', 'path', 'url'],
         },
       ],
+      order: [['name', 'ASC']],
+      limit: 4,
+      offset: (atualPage - 1) * 4,
     });
-    return res.json(deliveryman);
-  }
-
-  const deliverymans = await Deliveryman.findAndCountAll({
-    where: { name: { [Op.iLike]: `%${name}%` } },
-    include: [
-      {
-        model: File,
-        as: 'avatar',
-        attributes: ['name', 'path', 'url'],
-      },
-    ],
-    order: [['name', 'ASC']],
-    limit: 4,
-    offset: (atualPage - 1) * 4,
-  });
-  return res.json(deliverymans);
+    return res.json(deliverymans);
   }
 
   async store(req, res) {
@@ -49,7 +48,9 @@ class DeliverymanController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
+      return res
+        .status(400)
+        .json({ error: 'Erro de validação, confira seus dados.' });
     }
 
     const deliverymanExists = await Deliveryman.findOne({
@@ -59,7 +60,7 @@ class DeliverymanController {
     if (deliverymanExists) {
       return res
         .status(400)
-        .json({ error: 'deliveryman exists' });
+        .json({ error: 'Já existe um entregador com este e-mail.' });
     }
 
     const { id, name, email } = await Deliveryman.create(req.body);
@@ -76,7 +77,7 @@ class DeliverymanController {
     if (!(await schema.isValid(req.body))) {
       return res
         .status(400)
-        .json({ error: 'Validation fails' });
+        .json({ error: 'Erro de validação, confira seus dados.' });
     }
 
     const { id } = req.params;
@@ -85,7 +86,7 @@ class DeliverymanController {
     const deliveryman = await Deliveryman.findByPk(id);
 
     if (!deliveryman) {
-      return res.status(400).json({ error: 'deliveryman does not exists' });
+      return res.status(400).json({ error: 'Este entregador não existe.' });
     }
 
     if (email !== deliveryman.email) {
@@ -96,7 +97,7 @@ class DeliverymanController {
       if (hasEmail) {
         return res
           .status(400)
-          .json({ error: 'deliveryman exists' });
+          .json({ error: 'Já existe um entregador com este e-mail.' });
       }
     }
 
@@ -114,10 +115,11 @@ class DeliverymanController {
 
   async delete(req, res) {
     const { id } = req.params;
+
     const deliveryman = await Deliveryman.findByPk(id);
 
     if (!deliveryman) {
-      return res.status(400).json({ error: 'deliveryman does not exists' });
+      return res.status(400).json({ error: 'Este entregador não existe.' });
     }
 
     await Deliveryman.destroy({
@@ -126,8 +128,7 @@ class DeliverymanController {
       },
     });
 
-    return res.json({ success: 'deliveryman deleted' });
-
+    return res.json({ success: 'O entregador foi excluído com sucesso!' });
   }
 }
 

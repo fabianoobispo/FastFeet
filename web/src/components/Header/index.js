@@ -21,10 +21,10 @@ export default function Header() {
         <nav>
           <img src={logo} alt="FastFeet" />
           <Navigation>
-            <NavLink to="/deliveries">ENCOMENDAS</NavLink>
-            <NavLink to="/order">PEDIDOS</NavLink>
-            <NavLink to="/deliverymen">ENTREGADORES</NavLink>
+            <NavLink to="/orders">ENCOMENDAS</NavLink>
+            <NavLink to="/deliverymans">ENTREGADORES</NavLink>
             <NavLink to="/recipients">DESTINATÁRIOS</NavLink>
+            <NavLink to="/order-problems">PROBLEMAS</NavLink>
           </Navigation>
         </nav>
 

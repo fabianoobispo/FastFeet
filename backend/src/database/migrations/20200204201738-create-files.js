@@ -1,29 +1,20 @@
-const Sequelize = require('sequelize');
-
 module.exports = {
-  up: queryInterface => {
-    return queryInterface.createTable('deliverymans', {
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.createTable('files', {
       id: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
         allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
       },
       name: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      email: {
+      path: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
-      },
-      avatar_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'files', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
-        allowNull: true,
       },
       created_at: {
         type: Sequelize.DATE,
@@ -37,6 +28,6 @@ module.exports = {
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('deliverymans');
+    return queryInterface.dropTable('files');
   },
 };

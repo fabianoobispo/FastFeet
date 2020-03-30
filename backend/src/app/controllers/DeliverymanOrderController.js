@@ -1,20 +1,22 @@
+import { startOfDay, endOfDay } from 'date-fns';
 import { Op } from 'sequelize';
-import Recipient from '../models/Recipient';
-import Order from '../models/Order';
 import Deliveryman from '../models/Deliveryman';
+import Order from '../models/Order';
 import File from '../models/File';
+import Recipient from '../models/Recipient';
 
 class DeliverymanOrderController {
   async index(req, res) {
     const { id } = req.params;
     const { page } = req.query;
     const { delivered } = req.query;
+    console.log(delivered);
     const atualPage = page || '1';
 
     const deliveryman = await Deliveryman.findByPk(id);
 
     if (!deliveryman) {
-      return res.status(400).json({ error: 'deliveryman does not exists.' });
+      return res.status(400).json({ error: 'Não existe este entregador.' });
     }
 
     if (delivered === 'false') {
@@ -88,6 +90,15 @@ class DeliverymanOrderController {
     });
 
     return res.json(orders);
+
+    // const deliveredOrders = orders.rows.filter(
+    //   order => order.end_date && order
+    // );
+    // const undeliveredOrders = orders.rows.filter(
+    //   order => !order.end_date && order
+    // );
+
+    // return res.json(delivered === 'true' ? deliveredOrders : undeliveredOrders);
   }
 
   async update(req, res) {
@@ -98,13 +109,13 @@ class DeliverymanOrderController {
     const deliveryman = await Deliveryman.findByPk(id);
 
     if (!deliveryman) {
-      return res.status(400).json({ error: 'deliveryman does not exists.' });
+      return res.status(400).json({ error: 'Não existe este entregador.' });
     }
 
     const order = await Order.findByPk(orderId);
 
     if (!order) {
-      return res.status(400).json({ error: 'delivery does not exists.' });
+      return res.status(400).json({ error: 'Esta encomenda não existe' });
     }
 
     const date = new Date();
@@ -120,7 +131,7 @@ class DeliverymanOrderController {
     if (endDelivery === 'false' && ordersByDay.length >= 5) {
       return res
         .status(400)
-        .json({ error: 'Exceeded 5 withdrawals' });
+        .json({ error: 'Limite de 5 retiradas por dia excedido' });
     }
 
     await order.update(req.body);
@@ -145,7 +156,6 @@ class DeliverymanOrderController {
       start_date,
       end_date,
     });
-
   }
 }
 

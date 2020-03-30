@@ -57,7 +57,7 @@ class DeliveryProblemController {
     if (!(await schema.isValid(req.body))) {
       return res
         .status(400)
-        .json({ error: 'Validation fails.' });
+        .json({ error: 'Erro de validação, confira seus dados.' });
     }
 
     const { id, delivery_id } = await DeliveryProblem.create({
@@ -78,7 +78,7 @@ class DeliveryProblemController {
     const deliveryProblem = await DeliveryProblem.findByPk(id);
 
     if (!deliveryProblem) {
-      return res.status(400).json({ error: 'This problem does not exist.' });
+      return res.status(400).json({ error: 'Este problema não existe ' });
     }
 
     const { delivery_id } = deliveryProblem;
@@ -97,15 +97,15 @@ class DeliveryProblemController {
     });
 
     if (!order) {
-      return res.status(400).json({ error: 'This order does not exist.' });
+      return res.status(400).json({ error: 'Esta encomenda não existe.' });
     }
 
     if (order.canceled_at !== null) {
-      return res.status(400).json({ error: 'This order has already been canceled.' });
+      return res.status(400).json({ error: 'Este pedido já foi cancelado.' });
     }
 
     if (order.end_date !== null) {
-      return res.status(400).json({ error: 'This order has already been delivered.' });
+      return res.status(400).json({ error: 'Este pedido já foi entregue.' });
     }
 
     const {

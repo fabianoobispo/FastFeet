@@ -1,13 +1,12 @@
 import * as Yup from 'yup';
 import { Op } from 'sequelize';
-
 import Order from '../models/Order';
-import Recipient from '../models/Recipient';
 import Deliveryman from '../models/Deliveryman';
+import Recipient from '../models/Recipient';
 import File from '../models/File';
 
-import Queue from '../../lib/Queue';
 import NewOrderMail from '../jobs/NewOrderMail';
+import Queue from '../../lib/Queue';
 
 class OrderController {
   async index(req, res) {
@@ -57,7 +56,7 @@ class OrderController {
     if (!(await schema.isValid(req.body))) {
       return res
         .status(400)
-        .json({ error: 'Validation fails.' });
+        .json({ error: 'Erro de validação, confira seus dados.' });
     }
 
     try {
@@ -77,7 +76,7 @@ class OrderController {
               'complement',
               'state',
               'city',
-              'postcode',
+              'cep',
             ],
           },
         ],
@@ -92,57 +91,57 @@ class OrderController {
       return res.json(order);
     } catch (err) {
       if (err.parent.constraint === 'orders_deliveryman_id_fkey') {
-        return res.status(400).json({ error: 'This deliveryman does not exist.' });
+        return res.status(400).json({ error: 'Esse destinatário não existe.' });
       }
 
       if (err.parent.constraint === 'orders_recipient_id_fkey') {
-        return res.status(400).json({ error: 'This recipient does not exist' });
+        return res.status(400).json({ error: 'Esse entregador não existe' });
       }
     }
     return this;
   }
 
   async update(req, res) {
-      const schema = Yup.object().shape({
+    const schema = Yup.object().shape({
       product: Yup.string().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
       return res
         .status(400)
-        .json({ error: 'Validation fails'});
-      }
+        .json({ error: 'Erro de validação, confira seus dados.' });
+    }
 
-      const { id } = req.params;
+    const { id } = req.params;
 
-      const order = await Order.findByPk(id);
+    const order = await Order.findByPk(id);
 
-      if (!order) {
-        return res.status(400).json({ error: ' This order does not exist.' });
-      }
+    if (!order) {
+      return res.status(400).json({ error: 'Esta encomenda não existe.' });
+    }
 
-      await order.update(req.body);
+    await order.update(req.body);
 
-      const {
-        recipient_id,
-        deliveryman_id,
-        signature_id,
-        product,
-        canceled_at,
-        start_date,
-        end_date,
-      } = await Order.findByPk(id);
+    const {
+      recipient_id,
+      deliveryman_id,
+      signature_id,
+      product,
+      canceled_at,
+      start_date,
+      end_date,
+    } = await Order.findByPk(id);
 
-      return res.json({
-        id,
-        recipient_id,
-        deliveryman_id,
-        signature_id,
-        product,
-        canceled_at,
-        start_date,
-        end_date,
-      });
+    return res.json({
+      id,
+      recipient_id,
+      deliveryman_id,
+      signature_id,
+      product,
+      canceled_at,
+      start_date,
+      end_date,
+    });
   }
 
   async delete(req, res) {
@@ -151,7 +150,7 @@ class OrderController {
     const order = await Order.findByPk(id);
 
     if (!order) {
-      return res.status(400).json({ error: 'This order does not exist.' });
+      return res.status(400).json({ error: 'Esta encomenda não existe.' });
     }
 
     await Order.destroy({
@@ -160,9 +159,8 @@ class OrderController {
       },
     });
 
-    return res.json({ success: 'The order was successfully deleted'});
+    return res.json({ success: 'A encomenda foi excluída com sucesso!' });
   }
-
-
 }
+
 export default new OrderController();
