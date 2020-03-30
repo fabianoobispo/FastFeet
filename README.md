@@ -6,12 +6,12 @@
   Desafio  FastFeet
 </h3>
 
-### :memo: Sobre a aplicação
+### :rocket: Sobre a aplicação
 
 Esta é uma aplicação construída para uma transportadora fictícia, a FastFeet, usando Node, React, React Native.
 
-- **API:** NodeJs usando MVC, banco de dados PostgreSQL, mongo e redis. Com autenticação JWt 
-- **WEB:** React .....
+- **API:** NodeJs usando banco de dados PostgreSQL, mongo e redis. Com autenticação JWt 
+- **WEB:** React usando redux, yup para verificação de dados, e compoonents estilizados.
 - **MOBILE:** React Native...
 
 ### :bookmark_tabs: **Funcionalidades de administrador**
@@ -46,8 +46,6 @@ docker run --name postgresfastfeet -e POSTGRES_PASSWORD=fastfeet -p 5432:5432 -d
 docker run --name redisfastfeet -p 6379:6379 -d -t redis:alpine
 
 ```
-
-
 ### Rodando migração e criando usuário Admin
 ```sh
 yarn sequelize db:migrate
@@ -62,14 +60,18 @@ yarn dev
 ```sh
 yarn queue
 ```
-### Com autenticação JWT
-
-### Realizando as devidas validaçôes
-
-### Envio de email para nova entrega e concelamneto de entrega.
 
 
+### Instalando Dependências Fontend
+```sh
+cd FastFeet/web
+yarn
+```
 
+### Iniciando a aplicação web
+```sh
+yarn start
+```
  
 
 
