@@ -2,7 +2,8 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
-import { Container, Content, Navigation, Profile } from './styles';
+import { Container, Content, Profile } from './styles';
+
 import { signOut } from '~/store/modules/auth/actions';
 
 import logo from '~/assets/logo.svg';
@@ -11,7 +12,7 @@ export default function Header() {
   const dispatch = useDispatch();
   const profile = useSelector(state => state.user.profile);
 
-  function handleSingOut() {
+  function handleSignOut() {
     dispatch(signOut());
   }
 
@@ -20,20 +21,42 @@ export default function Header() {
       <Content>
         <nav>
           <img src={logo} alt="FastFeet" />
-          <Navigation>
-            <NavLink to="/orders">ENCOMENDAS</NavLink>
-            <NavLink to="/deliverymans">ENTREGADORES</NavLink>
-            <NavLink to="/recipients">DESTINATÁRIOS</NavLink>
-            <NavLink to="/order-problems">PROBLEMAS</NavLink>
-          </Navigation>
+          <ul>
+            <NavLink activeStyle={{ color: '#000' }} id="orders" to="/orders">
+              ENCOMENDAS
+            </NavLink>
+            <NavLink
+              activeStyle={{ color: '#000' }}
+              id="deliverymans"
+              to="/deliverymans"
+            >
+              ENTREGADORES
+            </NavLink>
+            <NavLink
+              activeStyle={{ color: '#000' }}
+              id="recipients"
+              to="/recipients"
+            >
+              DESTINATÁRIOS
+            </NavLink>
+            <NavLink
+              activeStyle={{ color: '#000' }}
+              id="orderProblems"
+              to="/order-problems"
+            >
+              PROBLEMAS
+            </NavLink>
+          </ul>
         </nav>
 
         <aside>
           <Profile>
-            <strong>{profile.name}</strong>
-            <button type="button" onClick={handleSingOut}>
-              sair do sistema
-            </button>
+            <div>
+              <strong>{profile.name}</strong>
+              <NavLink to="/" onClick={handleSignOut}>
+                Sair do sistema
+              </NavLink>
+            </div>
           </Profile>
         </aside>
       </Content>

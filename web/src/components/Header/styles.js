@@ -1,84 +1,59 @@
 import styled from 'styled-components';
 
-import { colors } from '~/styles/colors';
-
 export const Container = styled.div`
-  background: #fff;
-  padding: 0 30px;
-
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 35px;
+  border: 1px solid #dddddd;
+  background-color: #ffffff;
+  align-items: center;
+  padding: 15px 0;
+  display: flex;
+  flex-direction: row;
 `;
 
 export const Content = styled.div`
-  height: 64px;
-  /* margin: 0 auto; */
-
   display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 0 30px;
   align-items: center;
   justify-content: space-between;
-
   nav {
     display: flex;
+    flex-direction: row;
     align-items: center;
-
     img {
-      width: 135px;
       height: 26px;
-      margin-right: 30px;
+      margin-right: 10px;
+      padding-right: 30px;
+      border-right: 1px solid #dddddd;
+    }
+    a {
+      color: #999999;
+      font-weight: bold;
+      line-height: 18px;
+      font-size: 15px;
+      padding: 20px;
     }
   }
-
   aside {
     display: flex;
-    align-items: center;
-  }
-`;
-
-export const Navigation = styled.div`
-  padding-left: 30px;
-  height: 32px;
-  border-left: 1px solid #ddd;
-
-  display: flex;
-  align-items: center;
-
-  a {
-    margin-right: 20px;
-    font-size: 15px;
-    font-weight: bold;
-    color: #999;
-    transition: color 0.2s;
-
-    &:hover {
-      color: ${colors.primary};
-    }
-
-    &.active {
-      color: #444;
-    }
   }
 `;
 
 export const Profile = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-
-  strong {
-    font-weight: bold;
-    color: #666;
-    margin-bottom: 5px;
-  }
-
-  button {
-    border: 0;
-    background: none;
-    color: ${colors.danger};
-    transition: color 0.2s;
-
-    &:hover {
-      color: ${colors.primary};
+  div {
+    display: flex;
+    flex-direction: column;
+    strong {
+      color: #666666;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    a {
+      font-size: 14px;
+      line-height: 16px;
+      text-align: right;
+      color: #de3b3b;
+      margin-top: 4px;
     }
   }
 `;
