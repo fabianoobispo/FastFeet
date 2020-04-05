@@ -10,7 +10,7 @@ class NewOrderMail {
 
     await Mail.sendMail({
       to: `${deliveryman.name} <${deliveryman.email}>`,
-      subject: 'Novo produto disponível para retirada',
+      subject: 'Você tem uma nova entrega!',
       template: 'newOrder',
       context: {
         deliveryman: deliveryman.name,
