@@ -12,7 +12,7 @@ Esta é uma aplicação construída para uma transportadora fictícia, a FastFee
 
 - **API:** NodeJs usando banco de dados PostgreSQL, mongo e redis. Com autenticação JWt 
 - **WEB:** React usando redux, yup para verificação de dados, e compoonents estilizados.
-- **MOBILE:** React Native...
+- **MOBILE:** React Native usando redux, e compoonents estilizados.
 
 ### :bookmark_tabs: **Funcionalidades de administrador**
 
@@ -32,11 +32,16 @@ Toda vez que uma encomenda é cadastrado para um entregador, o mesmo recebe um a
 ### :bookmark_tabs: **Rotas**
 As rotas estão disponiveis pra consulta no arquivo <a href="https://github.com/fabianoobispo/FastFeet/blob/master/backend/Insomnia_export.json" target="_blank" alt="Rotas">Insomnia.json</a>
 
+### Clonando repositorio
+```sh 
+git clone https://github.com/fabianoobispo/FastFeet
+```
+
 ### Instalando Dependências backend
 ```sh
 cd FastFeet/backend
-copiar dados do arquivo .env.example para .env
 yarn
+copiar dados do arquivo .env.example para .env
 ```
 
 ### Subindo os bancos postgres e redis via docker 
@@ -49,7 +54,7 @@ docker run --name redisfastfeet -p 6379:6379 -d -t redis:alpine
  
 
 ### Rodando migração e criando usuário Admin
-antes da migrate temos que criar um databese com o nome fastfeet dentro do banco postgres
+Antes da migrate temos que criar um databese com o nome fastfeet dentro do banco postgres
 ```sh
 yarn sequelize db:migrate
 yarn sequelize db:seed:all
@@ -82,13 +87,14 @@ yarn start
 ### Instalando Dependências Mobile
 ```sh
 cd FastFeet/app
-copiar dados do arquivo .env.example para .env
 yarn
+copiar dados do arquivo .env.example para .env
 ```
 
-### Iniciando a aplicação web
+### Iniciando a aplicação Mobile
 ```sh
 react-native run-android
 ```
+Obs.: App testado em dispositivo fisico android.
  
 
