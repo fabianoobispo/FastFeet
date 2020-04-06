@@ -34,8 +34,8 @@ As rotas estão disponiveis pra consulta no arquivo <a href="https://github.com/
 
 ### Instalando Dependências backend
 ```sh
-git clone ...
 cd FastFeet/backend
+copiar dados do arquivo .env.example para .env
 yarn
 ```
 
@@ -46,7 +46,10 @@ docker run --name postgresfastfeet -e POSTGRES_PASSWORD=fastfeet -p 5432:5432 -d
 docker run --name redisfastfeet -p 6379:6379 -d -t redis:alpine
 
 ```
+ 
+
 ### Rodando migração e criando usuário Admin
+antes da migrate temos que criar um databese com o nome fastfeet dentro do banco postgres
 ```sh
 yarn sequelize db:migrate
 yarn sequelize db:seed:all
@@ -75,4 +78,17 @@ yarn start
  
 
 
+
+### Instalando Dependências Mobile
+```sh
+cd FastFeet/app
+copiar dados do arquivo .env.example para .env
+yarn
+```
+
+### Iniciando a aplicação web
+```sh
+react-native run-android
+```
+ 
 
