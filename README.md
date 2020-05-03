@@ -10,6 +10,8 @@
 
 Esta é uma aplicação construída para uma transportadora fictícia, a FastFeet, usando Node, React, React Native.
 
+<img src=".github/gifFastfeet.gif">
+
 - **API:** NodeJs usando banco de dados PostgreSQL, mongo e redis. Com autenticação JWt 
 - **WEB:** React usando redux, yup para verificação de dados, e compoonents estilizados.
 - **MOBILE:** React Native usando redux, e compoonents estilizados.
